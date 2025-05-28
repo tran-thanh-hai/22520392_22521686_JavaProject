@@ -4,8 +4,8 @@
  */
 package View.SinhVien;
 
-import Model.Khoa;
-import DAO.KhoaDAO;
+import Model.Object.Khoa;
+import Model.DAO.KhoaDAO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;

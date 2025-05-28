@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.NhaTruongHomeController;
-import DAO.LichGiangDAO;
-import Model.LichGiang;
+import Model.DAO.LichGiangDAO;
+import Model.Object.LichGiang;
 import java.util.List;
 
 /**
@@ -25,7 +25,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
     private JTable dataTable;
     private DefaultTableModel tableModel;
 
-    // Labels and fields for schedule information
     private JLabel lblMaLop;
     private JTextField txtMaLop;
     private JLabel lblMaMH;
@@ -41,12 +40,10 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
     private JLabel lblDenNgay;
     private JTextField txtDenNgay;
 
-    // Action buttons
     private JButton btnThem;
     private JButton btnSua;
     private JButton btnXoa;
 
-    // Search components
     private JLabel lblSearchMaLopSearch;
     private JTextField txtSearchMaLopSearch;
     private JButton btnSearchMaLopSearch;
@@ -67,7 +64,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
 
     private NhaTruongHomeController controller;
 
-    // Thêm biến DAO
     private LichGiangDAO lichGiangDAO;
 
     public QuanLyLichGiang() {
@@ -79,25 +75,19 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
 
         controller = new NhaTruongHomeController(this);
 
-        // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
         btnBackToHome.addActionListener(this);
 
-        // Title Label
         lblTitle = new JLabel("Quản Lý Lịch Giảng", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Add the top panel to the frame
         add(topPanel, BorderLayout.NORTH);
 
-        // Data Display Area (using JTable)
         tableModel = new DefaultTableModel();
-        // Define table columns based on GIANGDAY SQL table
         tableModel.addColumn("Mã lớp");
         tableModel.addColumn("Mã MH");
         tableModel.addColumn("Mã GV");
@@ -111,17 +101,13 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Input and Action Panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
         int row = 0;
 
-        // Mã lớp
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -134,7 +120,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         txtMaLop = new JTextField(15);
         inputPanel.add(txtMaLop, gbc);
 
-        // Thêm Button
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -142,7 +127,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         btnThem = new JButton("Thêm");
         inputPanel.add(btnThem, gbc);
 
-        // Search by MaLop
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -167,7 +151,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Mã môn học
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -180,7 +163,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         txtMaMH = new JTextField(15);
         inputPanel.add(txtMaMH, gbc);
 
-        // Sửa Button
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -188,7 +170,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         btnSua = new JButton("Sửa");
         inputPanel.add(btnSua, gbc);
 
-        // Search by MaMH
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -213,7 +194,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Mã giáo viên
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -226,7 +206,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         txtMaGV = new JTextField(15);
         inputPanel.add(txtMaGV, gbc);
 
-        // Xóa Button
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -234,7 +213,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         btnXoa = new JButton("Xóa");
         inputPanel.add(btnXoa, gbc);
 
-        // Search by MaGV
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -259,7 +237,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Học kỳ
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -272,7 +249,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         txtHocKy = new JTextField(15);
         inputPanel.add(txtHocKy, gbc);
 
-        // Search by HocKy
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -297,7 +273,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Năm
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -310,7 +285,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         txtNam = new JTextField(15);
         inputPanel.add(txtNam, gbc);
 
-        // Search by Nam
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -335,7 +309,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Từ ngày
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -350,7 +323,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
 
         row++;
 
-        // Đến ngày
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -363,13 +335,10 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         txtDenNgay = new JTextField(15);
         inputPanel.add(txtDenNgay, gbc);
 
-        // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Khởi tạo DAO
         lichGiangDAO = new LichGiangDAO();
         
-        // Thêm ActionListener cho các nút
         btnThem.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
@@ -379,7 +348,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         btnSearchHocKySearch.addActionListener(this);
         btnSearchNamSearch.addActionListener(this);
         
-        // Thêm ListSelectionListener cho bảng
         dataTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = dataTable.getSelectedRow();
@@ -389,7 +357,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
             }
         });
         
-        // Load dữ liệu ban đầu
         loadDataToTable();
     }
 
@@ -416,7 +383,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         }
     }
 
-    // Thêm các phương thức xử lý
     private void loadDataToTable() {
         tableModel.setRowCount(0);
         List<LichGiang> dsLichGiang = lichGiangDAO.getAllLichGiang();
@@ -470,7 +436,6 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
         txtDenNgay.setText("");
     }
 
-    // Thêm các phương thức xử lý sự kiện
     private void themLichGiang() {
         try {
             LichGiang lg = layThongTinTuForm();

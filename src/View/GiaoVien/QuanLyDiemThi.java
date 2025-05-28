@@ -4,8 +4,8 @@
  */
 package View.GiaoVien;
 
-import Model.DiemThi;
-import DAO.DiemThiDAO;
+import Model.Object.DiemThi;
+import Model.DAO.DiemThiDAO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -71,19 +71,19 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
 
         controller = new GiaoVienHomeController(this);
 
-        // Khởi tạo các thành phần giao diện
+ 
         initializeComponents();
         
-        // Khởi tạo DAO và load dữ liệu
+ 
         diemThiDAO = new DiemThiDAO();
         loadDataToTable();
 
-        // Thêm action listeners cho các nút
+ 
         addActionListeners();
     }
 
     private void initializeComponents() {
-        // Panel trên cùng
+ 
         JPanel topPanel = new JPanel(new BorderLayout());
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
@@ -93,7 +93,7 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         topPanel.add(lblTitle, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
 
-        // Khởi tạo table model và table
+ 
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Mã HV");
         tableModel.addColumn("Mã MH");
@@ -107,13 +107,13 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Khởi tạo panel nhập liệu
+ 
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Khởi tạo các nút tìm kiếm
+ 
         btnSearchMaMH = new JButton("Tìm");
         btnSearchLanThi = new JButton("Tìm");
         btnSearchDiem = new JButton("Tìm");
@@ -285,7 +285,7 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Thêm mouse listener cho bảng
+ 
         dataTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

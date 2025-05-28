@@ -11,8 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import DAO.LopDAO;
-import Model.Lop;
+import Model.DAO.LopDAO;
+import Model.Object.Lop;
 import java.util.List;
 
 /**
@@ -25,7 +25,6 @@ public class QuanLyLop extends JFrame implements ActionListener {
     private JTable dataTable;
     private DefaultTableModel tableModel;
 
-    // Labels and fields for class information
     private JLabel lblMaLop;
     private JTextField txtMaLop;
     private JLabel lblTenLop;
@@ -37,12 +36,10 @@ public class QuanLyLop extends JFrame implements ActionListener {
     private JLabel lblMaGVCN;
     private JTextField txtMaGVCN;
 
-    // Action buttons
     private JButton btnThem;
     private JButton btnSua;
     private JButton btnXoa;
 
-    // Search components
     private JLabel lblSearchMaLopSearch;
     private JTextField txtSearchMaLopSearch;
     private JButton btnSearchMaLopSearch;
@@ -64,25 +61,19 @@ public class QuanLyLop extends JFrame implements ActionListener {
 
         controller = new NhaTruongHomeController(this);
 
-        // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
         btnBackToHome.addActionListener(this);
 
-        // Title Label
         lblTitle = new JLabel("Quản lý Lớp", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Add the top panel to the frame
         add(topPanel, BorderLayout.NORTH);
 
-        // Data Display Area (using JTable)
         tableModel = new DefaultTableModel();
-        // Define table columns based on LOP SQL table
         tableModel.addColumn("Mã lớp");
         tableModel.addColumn("Tên lớp");
         tableModel.addColumn("Trưởng lớp");
@@ -94,17 +85,13 @@ public class QuanLyLop extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Input and Action Panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
+        gbc.insets = new Insets(5, 5, 5, 5); 
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
         int row = 0;
 
-        // Mã lớp
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -117,7 +104,6 @@ public class QuanLyLop extends JFrame implements ActionListener {
         txtMaLop = new JTextField(15);
         inputPanel.add(txtMaLop, gbc);
 
-        // Thêm Button
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -125,7 +111,6 @@ public class QuanLyLop extends JFrame implements ActionListener {
         btnThem = new JButton("Thêm");
         inputPanel.add(btnThem, gbc);
 
-        // Search by MaLop
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -150,7 +135,6 @@ public class QuanLyLop extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Tên lớp
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -163,7 +147,6 @@ public class QuanLyLop extends JFrame implements ActionListener {
         txtTenLop = new JTextField(15);
         inputPanel.add(txtTenLop, gbc);
 
-        // Sửa Button
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -171,7 +154,6 @@ public class QuanLyLop extends JFrame implements ActionListener {
         btnSua = new JButton("Sửa");
         inputPanel.add(btnSua, gbc);
 
-        // Search by MaGVCN
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -196,7 +178,6 @@ public class QuanLyLop extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Trưởng lớp
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -209,7 +190,6 @@ public class QuanLyLop extends JFrame implements ActionListener {
         txtTruongLop = new JTextField(15);
         inputPanel.add(txtTruongLop, gbc);
 
-        // Xóa Button
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -220,7 +200,6 @@ public class QuanLyLop extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Sĩ số
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -236,7 +215,6 @@ public class QuanLyLop extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Mã GVCN
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -249,20 +227,17 @@ public class QuanLyLop extends JFrame implements ActionListener {
         txtMaGVCN = new JTextField(15);
         inputPanel.add(txtMaGVCN, gbc);
 
-        // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
 
         lopDAO = new LopDAO();
         loadDataToTable();
 
-        // Add action listeners
         btnThem.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
         btnSearchMaLopSearch.addActionListener(this);
         btnSearchMaGVSearch.addActionListener(this);
-
-        // Add listener for table
+    
         dataTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = dataTable.getSelectedRow();

@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.NhaTruongHomeController;
-import DAO.GiaoVienDAO;
-import Model.GiaoVien;
+import Model.DAO.GiaoVienDAO;
+import Model.Object.GiaoVien;
 import java.util.List;
 
 /**
@@ -25,7 +25,6 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
     private JTable dataTable;
     private DefaultTableModel tableModel;
 
-    // Labels and fields for teacher information
     private JLabel lblMaGV;
     private JTextField txtMaGV;
     private JLabel lblHoTen;
@@ -45,14 +44,12 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
     private JLabel lblLuongCoBan;
     private JTextField txtLuongCoBan;
 
-    // Action buttons
     private JButton btnThem;
     private JButton btnSua;
     private JButton btnXoa;
     private JButton btnTinhLuong;
     private JButton btnTinhLuongTatCa;
 
-    // Search components
     private JLabel lblSearchMaGVSearch;
     private JTextField txtSearchMaGVSearch;
     private JButton btnSearchMaGVSearch;
@@ -75,31 +72,25 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
     public QuanLyGiaoVien() {
         setTitle("Quản Lý Giáo Viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 650); // Adjusted size for consistency
-        setLocationRelativeTo(null); // Center the window
+        setSize(1000, 650); 
+        setLocationRelativeTo(null); 
         setLayout(new BorderLayout());
 
         controller = new NhaTruongHomeController(this);
 
-        // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
         btnBackToHome.addActionListener(this);
 
-        // Title Label
         lblTitle = new JLabel("Quản Lý Giáo Viên", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Add the top panel to the frame
         add(topPanel, BorderLayout.NORTH);
 
-        // Data Display Area (using JTable)
         tableModel = new DefaultTableModel();
-        // Define table columns based on GIAOVIEN SQL table
         tableModel.addColumn("Mã GV");
         tableModel.addColumn("Họ Tên");
         tableModel.addColumn("Chức vụ");
@@ -116,17 +107,13 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Input and Action Panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
+        gbc.insets = new Insets(5, 5, 5, 5); 
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
         int row = 0;
 
-        // Mã giáo viên (Row 0)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -139,7 +126,6 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         txtMaGV = new JTextField(15);
         inputPanel.add(txtMaGV, gbc);
 
-        // Thêm Button (Row 0)
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -147,7 +133,6 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         btnThem = new JButton("Thêm");
         inputPanel.add(btnThem, gbc);
 
-        // Search by MaGV (Row 0)
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -169,10 +154,9 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         btnSearchMaGVSearch = new JButton("Tìm");
         inputPanel.add(btnSearchMaGVSearch, gbc);
 
-        row++; // Increment row for the next group
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Reset fill to horizontal for text fields
+        row++; 
+        gbc.fill = GridBagConstraints.HORIZONTAL; 
 
-        // Họ tên (Row 1)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -185,7 +169,6 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         txtHoTen = new JTextField(15);
         inputPanel.add(txtHoTen, gbc);
 
-        // Sửa Button (Row 1)
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -193,7 +176,6 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         btnSua = new JButton("Sửa");
         inputPanel.add(btnSua, gbc);
 
-        // Search by ChucVu (Row 1)
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -215,10 +197,9 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         btnSearchChucVuSearch = new JButton("Tìm");
         inputPanel.add(btnSearchChucVuSearch, gbc);
 
-        row++; // Increment row
+        row++; 
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Chức vụ (Row 2)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -231,7 +212,6 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         txtChucVu = new JTextField(15);
         inputPanel.add(txtChucVu, gbc);
 
-        // Xóa Button (Row 2)
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -239,7 +219,6 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         btnXoa = new JButton("Xóa");
         inputPanel.add(btnXoa, gbc);
 
-        // Search by HeSoLuong (Row 2)
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -261,10 +240,9 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         btnSearchHeSoLuongSearch = new JButton("Tìm");
         inputPanel.add(btnSearchHeSoLuongSearch, gbc);
 
-        row++; // Increment row
+        row++; 
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Giới tính (Row 3)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -277,7 +255,6 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         txtGioiTinh = new JTextField(15);
         inputPanel.add(txtGioiTinh, gbc);
 
-        // Tinh luong button (Row 3)
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -285,7 +262,6 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         btnTinhLuong = new JButton("Tính lương");
         inputPanel.add(btnTinhLuong, gbc);
 
-        // Tinh luong tất cả button (Row 3)
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;

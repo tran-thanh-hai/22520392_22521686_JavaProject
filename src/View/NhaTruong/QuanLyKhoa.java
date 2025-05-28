@@ -12,8 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import Controller.NhaTruongHomeController;
-import DAO.KhoaDAO;
-import Model.Khoa;
+import Model.DAO.KhoaDAO;
+import Model.Object.Khoa;
 import java.util.List;
 
 /**
@@ -59,23 +59,18 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         controller = new NhaTruongHomeController(this);
         khoaDAO = new KhoaDAO();
 
-        // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
         btnBackToHome.addActionListener(this);
 
-        // Tiêu đề
         lblTitle = new JLabel("Quản Lý Khoa", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Add the top panel to the frame
         add(topPanel, BorderLayout.NORTH);
 
-        // Khu vực hiển thị dữ liệu
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Mã khoa");
         tableModel.addColumn("Tên khoa");
@@ -87,7 +82,6 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Thêm sự kiện click vào bảng
         dataTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -102,7 +96,6 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
             }
         });
 
-        // Panel nhập liệu và nút hành động
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -110,7 +103,6 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
 
         int row = 0;
 
-        // Mã khoa
         gbc.gridx = 0; gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         lblMaKhoa = new JLabel("Mã khoa:");
@@ -142,7 +134,6 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         btnSearchMaKhoaSearch.addActionListener(this);
         inputPanel.add(btnSearchMaKhoaSearch, gbc);
 
-        // Tên khoa
         row++;
         gbc.gridx = 0; gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -160,7 +151,6 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         btnSua.addActionListener(this);
         inputPanel.add(btnSua, gbc);
 
-        // Ngày thành lập
         row++;
         gbc.gridx = 0; gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -178,7 +168,6 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         btnXoa.addActionListener(this);
         inputPanel.add(btnXoa, gbc);
 
-        // Trưởng khoa
         row++;
         gbc.gridx = 0; gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -192,18 +181,14 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Load dữ liệu ban đầu
         loadDataToTable();
     }
 
     private void loadDataToTable() {
-        // Xóa dữ liệu cũ
         tableModel.setRowCount(0);
         
-        // Lấy danh sách khoa từ database
         List<Khoa> danhSachKhoa = khoaDAO.getAllKhoa();
         
-        // Thêm dữ liệu vào bảng
         for (Khoa khoa : danhSachKhoa) {
             Object[] row = {
                 khoa.getMaKhoa(),

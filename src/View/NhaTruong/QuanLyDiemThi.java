@@ -11,8 +11,8 @@ import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.NhaTruongHomeController;
-import DAO.DiemThiDAO;
-import Model.DiemThi;
+import Model.DAO.DiemThiDAO;
+import Model.Object.DiemThi;
 import java.util.List;
 
 /**
@@ -63,31 +63,31 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
     public QuanLyDiemThi() {
         setTitle("Quản Lý Điểm Thi");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(950, 650); // Adjusted size for consistency
-        setLocationRelativeTo(null); // Center the window
+        setSize(950, 650); 
+        setLocationRelativeTo(null); 
         setLayout(new BorderLayout());
 
         controller = new NhaTruongHomeController(this);
 
-        // Create a panel for the back button and title
+
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
+
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
         btnBackToHome.addActionListener(this);
 
-        // Title Label
+
         lblTitle = new JLabel("Quản Lý Điểm Thi", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Add the top panel to the frame
+
         add(topPanel, BorderLayout.NORTH);
 
-        // Data Display Area (using JTable)
+
         tableModel = new DefaultTableModel();
-        // Define table columns (replace with actual column names from your data)
+
         tableModel.addColumn("Mã HV");
         tableModel.addColumn("Mã MH");
         tableModel.addColumn("Lần thi");
@@ -100,17 +100,15 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Input and Action Panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
+        gbc.insets = new Insets(5, 5, 5, 5); 
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
+
         int row = 0;
 
-        // Mã HV
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -123,7 +121,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         txtMaHV = new JTextField(15);
         inputPanel.add(txtMaHV, gbc);
 
-        // Thêm Button
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -131,7 +128,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         btnThem = new JButton("Thêm");
         inputPanel.add(btnThem, gbc);
 
-        // Search by MaMH
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -156,7 +152,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Mã MH
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -169,7 +164,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         txtMaMH = new JTextField(15);
         inputPanel.add(txtMaMH, gbc);
 
-        // Sửa Button
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -177,7 +171,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         btnSua = new JButton("Sửa");
         inputPanel.add(btnSua, gbc);
 
-        // Search by LanThi
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -202,7 +195,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Lần thi
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -215,7 +207,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         txtLanThi = new JTextField(15);
         inputPanel.add(txtLanThi, gbc);
 
-        // Xóa Button
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -223,7 +214,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         btnXoa = new JButton("Xóa");
         inputPanel.add(btnXoa, gbc);
 
-        // Search by Diem
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -248,7 +238,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Ngày thi
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -264,7 +253,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Điểm
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -280,7 +268,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Kết quả
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -293,14 +280,11 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         txtKetQua = new JTextField(15);
         inputPanel.add(txtKetQua, gbc);
 
-        // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Initialize DAO and load data
         diemThiDAO = new DiemThiDAO();
         loadDataToTable();
 
-        // Add action listeners
         btnThem.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
@@ -308,7 +292,6 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         btnSearchLanThi.addActionListener(this);
         btnSearchDiem.addActionListener(this);
 
-        // Add listener for table selection
         dataTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = dataTable.getSelectedRow();

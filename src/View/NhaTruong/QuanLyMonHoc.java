@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.NhaTruongHomeController;
-import DAO.MonHocDAO;
-import Model.MonHoc;
+import Model.DAO.MonHocDAO;
+import Model.Object.MonHoc;
 import java.util.List;
 
 /**
@@ -25,7 +25,6 @@ public class QuanLyMonHoc extends JFrame implements ActionListener {
     private JTable dataTable;
     private DefaultTableModel tableModel;
 
-    // Labels and fields for course information
     private JLabel lblMaMH;
     private JTextField txtMaMH;
     private JLabel lblTenMH;
@@ -37,12 +36,10 @@ public class QuanLyMonHoc extends JFrame implements ActionListener {
     private JLabel lblMaKhoa;
     private JTextField txtMaKhoa;
 
-    // Action buttons
     private JButton btnThem;
     private JButton btnSua;
     private JButton btnXoa;
 
-    // Search components
     private JLabel lblSearchMaMHSearch;
     private JTextField txtSearchMaMHSearch;
     private JButton btnSearchMaMHSearch;
@@ -72,7 +69,6 @@ public class QuanLyMonHoc extends JFrame implements ActionListener {
         controller = new NhaTruongHomeController(this);
         monHocDAO = new MonHocDAO();
 
-        // Tạo panel trên cùng
         JPanel topPanel = new JPanel(new BorderLayout());
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
@@ -83,7 +79,6 @@ public class QuanLyMonHoc extends JFrame implements ActionListener {
         topPanel.add(lblTitle, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
 
-        // Khởi tạo bảng
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Mã MH");
         tableModel.addColumn("Tên MH");
@@ -96,22 +91,17 @@ public class QuanLyMonHoc extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Khởi tạo panel nhập liệu
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Khởi tạo các components
         initializeComponents();
 
-        // Thêm các components vào panel
         addComponentsToPanel(inputPanel, gbc);
 
-        // Thêm panel vào frame
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Thêm ListSelectionListener cho bảng
         dataTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = dataTable.getSelectedRow();
@@ -121,31 +111,26 @@ public class QuanLyMonHoc extends JFrame implements ActionListener {
             }
         });
 
-        // Load dữ liệu ban đầu
         loadDataToTable();
     }
 
     private void initializeComponents() {
-        // Khởi tạo các label
         lblMaMH = new JLabel("Mã môn học:");
         lblTenMH = new JLabel("Tên môn học:");
         lblTCLT = new JLabel("Tín chỉ lý thuyết:");
         lblTCTH = new JLabel("Tín chỉ thực hành:");
         lblMaKhoa = new JLabel("Mã khoa:");
 
-        // Khởi tạo các text field
         txtMaMH = new JTextField(15);
         txtTenMH = new JTextField(15);
         txtTCLT = new JTextField(15);
         txtTCTH = new JTextField(15);
         txtMaKhoa = new JTextField(15);
 
-        // Khởi tạo các nút chức năng
         btnThem = new JButton("Thêm");
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
 
-        // Khởi tạo các components tìm kiếm
         lblSearchMaMHSearch = new JLabel("Tìm kiếm theo mã môn học:");
         txtSearchMaMHSearch = new JTextField(10);
         btnSearchMaMHSearch = new JButton("Tìm");
@@ -166,7 +151,6 @@ public class QuanLyMonHoc extends JFrame implements ActionListener {
     private void addComponentsToPanel(JPanel panel, GridBagConstraints gbc) {
         int row = 0;
 
-        // Thêm các components vào panel theo thứ tự
         addComponent(panel, lblMaMH, txtMaMH, btnThem, 
                     lblSearchMaMHSearch, txtSearchMaMHSearch, btnSearchMaMHSearch, gbc, row++);
         

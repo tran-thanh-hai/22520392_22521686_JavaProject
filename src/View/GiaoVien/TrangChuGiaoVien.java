@@ -37,28 +37,28 @@ public class TrangChuGiaoVien extends JFrame implements ActionListener {
     public TrangChuGiaoVien() {
         setTitle("Trang chủ giáo viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 400); // Adjusted size
-        setLocationRelativeTo(null); // Center the window
+        setSize(500, 400);  
+        setLocationRelativeTo(null);  
         setLayout(new BorderLayout());
 
         controller = new GiaoVienHomeController(this);
 
-        // Title Label
+ 
         lblTitle = new JLabel("Trang chủ", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         add(lblTitle, BorderLayout.NORTH);
 
-        // Button Panel
+ 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10); // Add some padding
+        gbc.insets = new Insets(10, 10, 10, 10);  
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add buttons to panel using GridBagLayout
+    
         int row = 0;
         int col = 0;
 
-        // Row 1
+ 
         gbc.gridx = col++;
         gbc.gridy = row;
         btnKhoa = new JButton("Khoa");
@@ -74,7 +74,7 @@ public class TrangChuGiaoVien extends JFrame implements ActionListener {
         btnLop = new JButton("Lớp");
         buttonPanel.add(btnLop, gbc);
 
-        // Row 2
+ 
         row++;
         col = 0;
         gbc.gridx = col++;
@@ -95,19 +95,18 @@ public class TrangChuGiaoVien extends JFrame implements ActionListener {
        
         
 
-        // Logout Button (positioned at bottom right)
+
         row++;
-        col = 2; // Place in the rightmost column
+        col = 2; 
         gbc.gridx = col;
         gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST; // Align to the east
-        gbc.fill = GridBagConstraints.NONE; // Do not stretch horizontally
+        gbc.anchor = GridBagConstraints.EAST; 
+        gbc.fill = GridBagConstraints.NONE; 
         btnDangXuat = new JButton("Đăng xuất");
         buttonPanel.add(btnDangXuat, gbc);
 
         add(buttonPanel, BorderLayout.CENTER);
 
-        // Add ActionListeners to buttons
         btnKhoa.addActionListener(this);
         btnSinhVien.addActionListener(this);
         btnLop.addActionListener(this);

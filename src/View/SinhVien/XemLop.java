@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.SinhVienHomeController;
-import Model.Lop;
-import DAO.LopDAO;
+import Model.Object.Lop;
+import Model.DAO.LopDAO;
 import java.util.List;
 
 /**

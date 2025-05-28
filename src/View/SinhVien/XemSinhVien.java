@@ -4,8 +4,8 @@
  */
 package View.SinhVien;
 
-import Model.SinhVien;
-import DAO.SinhVienDAO;
+import Model.Object.SinhVien;
+import Model.DAO.SinhVienDAO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;

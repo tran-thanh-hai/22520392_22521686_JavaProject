@@ -10,8 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.GiaoVienHomeController;
-import DAO.KhoaDAO;
-import Model.Khoa;
+import Model.DAO.KhoaDAO;
+import Model.Object.Khoa;
 import java.util.List;
 
 /**
@@ -44,23 +44,23 @@ public class XemKhoa extends JFrame implements ActionListener {
         controller = new GiaoVienHomeController(this);
         khoaDAO = new KhoaDAO();
 
-        // Create a panel for the back button and title
+ 
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
+ 
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
         btnBackToHome.addActionListener(this);
 
-        // Tiêu đề
+ 
         lblTitle = new JLabel("Quản Lý Khoa", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Add the top panel to the frame
+ 
         add(topPanel, BorderLayout.NORTH);
 
-        // Khu vực hiển thị dữ liệu
+ 
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Mã khoa");
         tableModel.addColumn("Tên khoa");
@@ -72,7 +72,7 @@ public class XemKhoa extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel tìm kiếm
+ 
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         
         lblSearchMaKhoaSearch = new JLabel("Tìm kiếm theo mã khoa:");
@@ -87,7 +87,7 @@ public class XemKhoa extends JFrame implements ActionListener {
 
         add(searchPanel, BorderLayout.SOUTH);
 
-        // Load dữ liệu ban đầu
+ 
         loadDataToTable();
     }
 

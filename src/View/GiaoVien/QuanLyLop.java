@@ -10,8 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.GiaoVienHomeController;
-import DAO.LopDAO;
-import Model.Lop;
+import Model.DAO.LopDAO;
+import Model.Object.Lop;
 import java.util.List;
 
 /**

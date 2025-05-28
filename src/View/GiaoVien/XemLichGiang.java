@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.GiaoVienHomeController;
-import DAO.LichGiangDAO;
-import Model.LichGiang;
+import Model.DAO.LichGiangDAO;
+import Model.Object.LichGiang;
 import java.util.List;
 
 /**
@@ -25,10 +25,7 @@ public class XemLichGiang extends JFrame implements ActionListener {
     private JTable dataTable;
     private DefaultTableModel tableModel;
 
-    // Labels and fields for schedule information
 
-
-    // Search components
     private JLabel lblSearchMaLopSearch;
     private JTextField txtSearchMaLopSearch;
     private JButton btnSearchMaLopSearch;
@@ -54,31 +51,32 @@ public class XemLichGiang extends JFrame implements ActionListener {
     public XemLichGiang() {
         setTitle("Xem Lịch Giảng");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 650); // Adjusted size for consistency
-        setLocationRelativeTo(null); // Center the window
+        setSize(1000, 650); 
+        setLocationRelativeTo(null); 
         setLayout(new BorderLayout());
 
         controller = new GiaoVienHomeController(this);
 
-        // Create a panel for the back button and title
+
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
+
+
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
         btnBackToHome.addActionListener(this);
 
-        // Title Label
+ 
         lblTitle = new JLabel("Quản Lý Lịch Giảng", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Add the top panel to the frame
+ 
         add(topPanel, BorderLayout.NORTH);
 
-        // Data Display Area (using JTable)
+ 
         tableModel = new DefaultTableModel();
-        // Define table columns based on GIANGDAY SQL table
+ 
         tableModel.addColumn("Mã lớp");
         tableModel.addColumn("Mã MH");
         tableModel.addColumn("Mã GV");
@@ -92,14 +90,13 @@ public class XemLichGiang extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Input and Action Panel
+ 
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
+        gbc.insets = new Insets(5, 5, 5, 5);  
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
+ 
         int row = 0;
 
 
@@ -131,7 +128,7 @@ public class XemLichGiang extends JFrame implements ActionListener {
 
 
 
-        // Search by MaMH
+ 
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -153,7 +150,7 @@ public class XemLichGiang extends JFrame implements ActionListener {
 
 
 
-        // Search by MaGV
+ 
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -175,7 +172,7 @@ public class XemLichGiang extends JFrame implements ActionListener {
 
 
 
-        // Search by HocKy
+ 
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -196,7 +193,7 @@ public class XemLichGiang extends JFrame implements ActionListener {
 
 
 
-        // Search by Nam
+ 
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -222,13 +219,13 @@ public class XemLichGiang extends JFrame implements ActionListener {
 
 
 
-        // Add the input panel to the frame
+ 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Khởi tạo DAO
+ 
         lichGiangDAO = new LichGiangDAO();
 
-        // Thêm action listeners cho các nút tìm kiếm
+ 
         btnSearchMaLopSearch = new JButton("Tìm");
         btnSearchMaLopSearch.addActionListener(this);
         gbc.gridx = 5;

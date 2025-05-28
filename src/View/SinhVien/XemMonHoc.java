@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.SinhVienHomeController;
-import Model.MonHoc;
-import DAO.MonHocDAO;
+import Model.Object.MonHoc;
+import Model.DAO.MonHocDAO;
 import java.util.List;
 
 /**

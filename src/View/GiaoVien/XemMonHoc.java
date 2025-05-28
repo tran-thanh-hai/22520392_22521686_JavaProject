@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.GiaoVienHomeController;
-import DAO.MonHocDAO;
-import Model.MonHoc;
+import Model.DAO.MonHocDAO;
+import Model.Object.MonHoc;
 import java.util.List;
 
 /**
@@ -25,10 +25,7 @@ public class XemMonHoc extends JFrame implements ActionListener {
     private JTable dataTable;
     private DefaultTableModel tableModel;
 
-    // Labels and fields for course information
-
-
-    // Search components
+ 
     private JLabel lblSearchMaMHSearch;
     private JTextField txtSearchMaMHSearch;
     private JButton btnSearchMaMHSearch;
@@ -51,31 +48,30 @@ public class XemMonHoc extends JFrame implements ActionListener {
     public XemMonHoc() {
         setTitle("Xem Môn học");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(950, 650); // Adjusted size for consistency
-        setLocationRelativeTo(null); // Center the window
+        setSize(950, 650);  
+        setLocationRelativeTo(null);  
         setLayout(new BorderLayout());
 
         controller = new GiaoVienHomeController(this);
-
-        // Create a panel for the back button and title
+ 
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
+   
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
         btnBackToHome.addActionListener(this);
 
-        // Title Label
+ 
         lblTitle = new JLabel("Quản lý Môn học", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Add the top panel to the frame
+ 
         add(topPanel, BorderLayout.NORTH);
 
-        // Data Display Area (using JTable)
+ 
         tableModel = new DefaultTableModel();
-        // Define table columns based on MONHOC SQL table
+ 
         tableModel.addColumn("Mã MH");
         tableModel.addColumn("Tên MH");
         tableModel.addColumn("Tín chỉ lý thuyết");
@@ -87,19 +83,13 @@ public class XemMonHoc extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Input and Action Panel
+ 
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
         int row = 0;
 
-
-
-        // Search by MaMH
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -124,9 +114,6 @@ public class XemMonHoc extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-
-
-        // Search by TCLT
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -141,14 +128,9 @@ public class XemMonHoc extends JFrame implements ActionListener {
         txtSearchTCLTSearch = new JTextField(10);
         inputPanel.add(txtSearchTCLTSearch, gbc);
 
-
-
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-
-
-        // Search by TCTH
+ 
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -163,14 +145,9 @@ public class XemMonHoc extends JFrame implements ActionListener {
         txtSearchTCTHSearch = new JTextField(10);
         inputPanel.add(txtSearchTCTHSearch, gbc);
 
-
-
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-
-
-        // Search by MaKhoa
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -185,20 +162,13 @@ public class XemMonHoc extends JFrame implements ActionListener {
         txtSearchMaKhoaSearch = new JTextField(10);
         inputPanel.add(txtSearchMaKhoaSearch, gbc);
 
-
-
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-
-
-        // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Khởi tạo DAO
         monHocDAO = new MonHocDAO();
 
-        // Thêm action listeners cho các nút tìm kiếm
         btnSearchMaMHSearch = new JButton("Tìm");
         btnSearchMaMHSearch.addActionListener(this);
         gbc.gridx = 5;

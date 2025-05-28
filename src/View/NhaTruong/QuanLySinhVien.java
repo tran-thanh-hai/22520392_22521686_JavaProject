@@ -10,8 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.NhaTruongHomeController;
-import DAO.SinhVienDAO;
-import Model.SinhVien;
+import Model.DAO.SinhVienDAO;
+import Model.Object.SinhVien;
 import java.util.List;
 
 /**
@@ -24,7 +24,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
     private JTable dataTable;
     private DefaultTableModel tableModel;
 
-    // Labels and fields for student information
     private JLabel lblMaSV;
     private JTextField txtMaSV;
     private JLabel lblHoTenSV;
@@ -40,7 +39,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
     private JLabel lblNoiSinh;
     private JTextField txtNoiSinh;
 
-    // Action buttons
     private JButton btnThem;
     private JButton btnSua;
     private JButton btnXoa;
@@ -49,7 +47,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
     private JButton btnTinhDiemTrungBinhTatCa;
     private JButton btnXepLoaiTatCa;
 
-    // Search components
     private JLabel lblSearchMaSV;
     private JTextField txtSearchMaSV;
     private JButton btnSearchMaSV;
@@ -67,7 +64,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
 
     private NhaTruongHomeController controller;
 
-    // Thêm đối tượng SinhVienDAO
     private SinhVienDAO sinhVienDAO;
 
     public QuanLySinhVien() {
@@ -79,40 +75,30 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
 
         controller = new NhaTruongHomeController(this);
 
-        // Khởi tạo SinhVienDAO trong constructor
         sinhVienDAO = new SinhVienDAO();
 
-        // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
         btnBackToHome.addActionListener(this);
 
-        // Title Label
         lblTitle = new JLabel("Quản Lý Sinh Viên", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Add the top panel to the frame
         add(topPanel, BorderLayout.NORTH);
 
-        // Data Display Area (using JTable)
         initializeTable();
 
-        // Input and Action Panel
         JPanel inputPanel = createInputPanel();
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Panel chứa bảng dữ liệu
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Thêm action listeners
         addActionListeners();
 
-        // Load dữ liệu ban đầu
         loadDataToTable();
     }
 
@@ -131,7 +117,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         dataTable = new JTable(tableModel);
         dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        // Thêm listener cho việc chọn dòng trong bảng
         dataTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = dataTable.getSelectedRow();
@@ -148,24 +133,18 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Khởi tạo components
         initializeComponents();
 
-        // Thêm components vào panel
-        // Cột 1: Labels và TextFields
         addInputComponents(inputPanel, gbc);
 
-        // Cột 2: Buttons
         addActionButtons(inputPanel, gbc);
 
-        // Cột 3: Search components
         addSearchComponents(inputPanel, gbc);
 
         return inputPanel;
     }
 
     private void initializeComponents() {
-        // Labels
         lblMaSV = new JLabel("Mã sinh viên:");
         lblHoTenSV = new JLabel("Họ tên sinh viên:");
         lblChucVu = new JLabel("Chức vụ:");
@@ -174,7 +153,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         lblNgaySinh = new JLabel("Ngày sinh:");
         lblNoiSinh = new JLabel("Nơi sinh:");
 
-        // TextFields
         txtMaSV = new JTextField(15);
         txtHoTenSV = new JTextField(15);
         txtChucVu = new JTextField(15);
@@ -183,7 +161,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtNgaySinh = new JTextField(15);
         txtNoiSinh = new JTextField(15);
 
-        // Buttons
         btnThem = new JButton("Thêm");
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
@@ -192,7 +169,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         btnTinhDiemTrungBinhTatCa = new JButton("Tính điểm TB tất cả");
         btnXepLoaiTatCa = new JButton("Xếp loại tất cả");
 
-        // Search components
         lblSearchMaSV = new JLabel("Tìm theo mã SV:");
         lblSearchMaLop = new JLabel("Tìm theo mã lớp:");
         txtSearchMaSV = new JTextField(10);
@@ -202,7 +178,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
     }
 
     private void addInputComponents(JPanel panel, GridBagConstraints gbc) {
-        // Thêm các components vào panel theo thứ tự
         int row = 0;
         
         addComponent(panel, lblMaSV, txtMaSV, gbc, row++);
@@ -243,7 +218,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
     private void addSearchComponents(JPanel panel, GridBagConstraints gbc) {
         gbc.gridheight = 1;
         
-        // Tìm theo mã SV
         gbc.gridx = 3;
         gbc.gridy = 0;
         panel.add(lblSearchMaSV, gbc);
@@ -253,8 +227,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         
         gbc.gridx = 5;
         panel.add(btnSearchMaSV, gbc);
-
-        // Tìm theo mã lớp
+    
         gbc.gridx = 3;
         gbc.gridy = 1;
         panel.add(lblSearchMaLop, gbc);

@@ -10,8 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.GiaoVienHomeController;
-import DAO.SinhVienDAO;
-import Model.SinhVien;
+import Model.DAO.SinhVienDAO;
+import Model.Object.SinhVien;
 import java.util.List;
 
 /**
@@ -68,31 +68,30 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
     public QuanLySinhVien() {
         setTitle("Quản Lý Sinh Viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(950, 650); // Adjusted size for table and more search fields
-        setLocationRelativeTo(null); // Center the window
+        setSize(950, 650);  
+        setLocationRelativeTo(null);  
         setLayout(new BorderLayout());
 
         controller = new GiaoVienHomeController(this);
 
-        // Create a panel for the back button and title
-        JPanel topPanel = new JPanel(new BorderLayout());
+         JPanel topPanel = new JPanel(new BorderLayout());
 
-        // Back Button
+ 
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
         btnBackToHome.addActionListener(this);
 
-        // Title Label
+ 
         lblTitle = new JLabel("Quản Lý Sinh Viên", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Add the top panel to the frame
+ 
         add(topPanel, BorderLayout.NORTH);
 
-        // Data Display Area (using JTable)
+ 
         tableModel = new DefaultTableModel();
-        // Define table columns (replace with actual column names from your data)
+ 
         tableModel.addColumn("Mã sinh viên");
         tableModel.addColumn("Họ tên sinh viên");
         tableModel.addColumn("Giới tính");
@@ -107,10 +106,10 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Input and Action Panel
+ 
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
+        gbc.insets = new Insets(5, 5, 5, 5);  
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         int row = 0;
@@ -148,30 +147,30 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtSearchMaSVSearch = new JTextField(10);
         inputPanel.add(txtSearchMaSVSearch, gbc);
         
-        // Khởi tạo các nút tìm kiếm trước khi thêm vào panel
+ 
         btnSearchMaSVSearch = new JButton("Tìm");
         btnSearchMaLopSearch = new JButton("Tìm");
         btnSearchDiemTrungBinh = new JButton("Tìm");
         btnSearchXepLoai = new JButton("Tìm");
 
-        // Thêm nút tìm kiếm mã sinh viên
+ 
         gbc.gridx = 5;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.NONE;
         inputPanel.add(btnSearchMaSVSearch, gbc);
 
-        // Thêm nút tìm kiếm mã lớp
+ 
         gbc.gridx = 5;
         gbc.gridy = 1;
         inputPanel.add(btnSearchMaLopSearch, gbc);
 
-        // Thêm nút tìm kiếm điểm trung bình
+ 
         gbc.gridx = 5;
         gbc.gridy = 2;
         inputPanel.add(btnSearchDiemTrungBinh, gbc);
 
-        // Thêm nút tìm kiếm xếp loại
+ 
         gbc.gridx = 5;
         gbc.gridy = 3;
         inputPanel.add(btnSearchXepLoai, gbc);
@@ -323,10 +322,10 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // Khởi tạo DAO
+ 
         sinhVienDAO = new SinhVienDAO();
         
-        // Thêm action listeners cho tất cả các nút
+ 
         btnThem.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
@@ -337,10 +336,10 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         btnSearchDiemTrungBinh.addActionListener(this);
         btnSearchXepLoai.addActionListener(this);
         
-        // Load dữ liệu ban đầu
+ 
         loadDataToTable();
 
-        // Thêm listener cho bảng
+ 
         dataTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = dataTable.getSelectedRow();
