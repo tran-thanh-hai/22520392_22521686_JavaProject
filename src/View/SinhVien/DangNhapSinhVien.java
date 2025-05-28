@@ -6,6 +6,10 @@ package View.SinhVien;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import Controller.SinhVienLoginController;
+import View.DangNhapChungView;
 
 /**
  *
@@ -32,7 +36,7 @@ public class DangNhapSinhVien extends JFrame {
         txtUsername = new JTextField(15);
         txtPassword = new JPasswordField(15); // Use JPasswordField for password input
         btnLogin = new JButton("Đăng nhập");
-        btnExit = new JButton("Thoát");
+        btnExit = new JButton("Quay lại");
 
         // Create panels for layout
         JPanel panel = new JPanel(new GridBagLayout());
@@ -73,9 +77,19 @@ public class DangNhapSinhVien extends JFrame {
         add(panel);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new DangNhapSinhVien().setVisible(true);
-        });
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnLogin) {
+            String username = txtUsername.getText();
+            String password = new String(txtPassword.getPassword());
+            controller.handleLogin(username, password);
+        } else if (e.getSource() == btnExit) {
+            // Navigate back to DangNhapChungView
+            DangNhapChungView commonLoginView = new DangNhapChungView();
+            commonLoginView.setVisible(true);
+            this.dispose(); // Close the current frame
+        }
     }
+
+
 }

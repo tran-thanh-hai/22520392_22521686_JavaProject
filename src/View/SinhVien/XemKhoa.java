@@ -7,13 +7,16 @@ package View.SinhVien;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import Controller.SinhVienHomeController;
 
 /**
  *
  * @author rubik
  */
 
-public class XemKhoa extends JFrame {
+public class XemKhoa extends JFrame implements ActionListener {
 
     private JLabel lblTitle;
     private JTable dataTable;
@@ -25,12 +28,26 @@ public class XemKhoa extends JFrame {
     private JTextField txtSearchMaKhoaSearch;
     private JButton btnSearchMaKhoaSearch;
 
+    private JButton btnBackToHome;
+
+    private SinhVienHomeController controller;
+
     public XemKhoa() {
         setTitle("Xem Khoa");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(900, 550);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+
+        controller = new SinhVienHomeController(this);
+
+        // Create a panel for the back button and title
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+        // Back Button
+        btnBackToHome = new JButton("Quay về trang chủ");
+        topPanel.add(btnBackToHome, BorderLayout.WEST);
+        btnBackToHome.addActionListener(this);
 
         // Tiêu đề
         lblTitle = new JLabel("Quản Lý Khoa", SwingConstants.CENTER);
@@ -82,10 +99,14 @@ public class XemKhoa extends JFrame {
         add(inputPanel, BorderLayout.SOUTH);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new XemKhoa().setVisible(true);
-        });
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnBackToHome) {
+            controller.navigateToTrangChu();
+        }
+        // Add action handling for other buttons here if needed
     }
+
+
 }
 

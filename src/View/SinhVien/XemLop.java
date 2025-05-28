@@ -7,13 +7,16 @@ package View.SinhVien;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import Controller.SinhVienHomeController;
 
 /**
  *
  * @author rubik
  */
-public class XemLop extends JFrame {
+public class XemLop extends JFrame implements ActionListener {
 
     private JLabel lblTitle;
     private JTable dataTable;
@@ -29,6 +32,10 @@ public class XemLop extends JFrame {
     private JTextField txtSearchMaGVSearch;
     private JButton btnSearchMaGVSearch;
 
+    private JButton btnBackToHome;
+
+    private SinhVienHomeController controller;
+
     public XemLop() {
         setTitle("Xem Lớp");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,6 +43,19 @@ public class XemLop extends JFrame {
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
+<<<<<<< HEAD
+=======
+        controller = new SinhVienHomeController(this);
+
+        // Create a panel for the back button and title
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+        // Back Button
+        btnBackToHome = new JButton("Quay về trang chủ");
+        topPanel.add(btnBackToHome, BorderLayout.WEST);
+        btnBackToHome.addActionListener(this);
+
+>>>>>>> a5fea37dda226cb9824c747f338d4cabf4931dda
         // Title Label
         lblTitle = new JLabel("Xem Lớp", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
@@ -124,9 +144,13 @@ public class XemLop extends JFrame {
         add(inputPanel, BorderLayout.SOUTH);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new XemLop().setVisible(true);
-        });
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnBackToHome) {
+            controller.navigateToTrangChu();
+        }
+        // Add action handling for other buttons here if needed
     }
+
+
 }

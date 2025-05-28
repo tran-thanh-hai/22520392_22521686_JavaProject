@@ -7,6 +7,9 @@ package View.SinhVien;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import Controller.SinhVienHomeController;
 
 /**
  *
@@ -34,12 +37,31 @@ public class XemSinhVien extends JFrame {
     private JTextField txtSearchXepLoai;
     private JButton btnSearchXepLoai;
 
+    private JButton btnBackToHome;
+
+    private SinhVienHomeController controller;
+
     public XemSinhVien() {
         setTitle("Xem Sinh Viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(950, 650); // Adjusted size for table and more search fields
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
+
+        controller = new SinhVienHomeController(this);
+
+        // Create a panel for the back button and title
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+        // Back Button
+        btnBackToHome = new JButton("Quay về trang chủ");
+        topPanel.add(btnBackToHome, BorderLayout.WEST);
+        btnBackToHome.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.navigateToTrangChu();
+            }
+        });
 
         // Title Label
         lblTitle = new JLabel("Xem Sinh Viên", SwingConstants.CENTER);
@@ -172,10 +194,5 @@ public class XemSinhVien extends JFrame {
         add(inputPanel, BorderLayout.SOUTH);
     }
 
-    public static void main(String[] args) {
-        // Run the GUI creation on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(() -> {
-            new XemSinhVien().setVisible(true);
-        });
-    }
+
 }

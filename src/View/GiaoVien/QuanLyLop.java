@@ -7,19 +7,22 @@ package View.GiaoVien;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.text.SimpleDateFormat;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import Controller.GiaoVienHomeController;
+
 
 /**
  *
  * @author rubik
  */
-public class QuanLyLop extends JFrame {
+public class QuanLyLop extends JFrame implements ActionListener {
 
     private JLabel lblTitle;
     private JTable dataTable;
     private DefaultTableModel tableModel;
 
-    // Labels and fields for class information
+
     private JLabel lblMaLop;
     private JTextField txtMaLop;
     private JLabel lblTenLop;
@@ -31,12 +34,12 @@ public class QuanLyLop extends JFrame {
     private JLabel lblMaGVCN;
     private JTextField txtMaGVCN;
 
-    // Action buttons
+
     private JButton btnThem;
     private JButton btnSua;
     private JButton btnXoa;
 
-    // Search components
+
     private JLabel lblSearchMaLopSearch;
     private JTextField txtSearchMaLopSearch;
     private JButton btnSearchMaLopSearch;
@@ -44,21 +47,37 @@ public class QuanLyLop extends JFrame {
     private JTextField txtSearchMaGVSearch;
     private JButton btnSearchMaGVSearch;
 
+    private JButton btnBackToHome;
+
+    private GiaoVienHomeController controller;
+
     public QuanLyLop() {
         setTitle("Quản lý Lớp");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(950, 650); // Adjusted size for consistency
-        setLocationRelativeTo(null); // Center the window
+        setSize(950, 650);
+        setLocationRelativeTo(null); 
         setLayout(new BorderLayout());
 
-        // Title Label
+        controller = new GiaoVienHomeController(this);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+
+        btnBackToHome = new JButton("Quay lại trang chủ");
+        topPanel.add(btnBackToHome, BorderLayout.WEST);
+        btnBackToHome.addActionListener(this);
+
+
         lblTitle = new JLabel("Quản lý Lớp", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
-        add(lblTitle, BorderLayout.NORTH);
+        topPanel.add(lblTitle, BorderLayout.CENTER);
 
-        // Data Display Area (using JTable)
+
+        add(topPanel, BorderLayout.NORTH);
+
+
         tableModel = new DefaultTableModel();
-        // Define table columns based on LOP SQL table
+
         tableModel.addColumn("Mã lớp");
         tableModel.addColumn("Tên lớp");
         tableModel.addColumn("Trưởng lớp");
@@ -70,17 +89,16 @@ public class QuanLyLop extends JFrame {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Input and Action Panel
+
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
+
         int row = 0;
 
-        // Mã lớp
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -93,7 +111,7 @@ public class QuanLyLop extends JFrame {
         txtMaLop = new JTextField(15);
         inputPanel.add(txtMaLop, gbc);
 
-        // Thêm Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -101,7 +119,7 @@ public class QuanLyLop extends JFrame {
         btnThem = new JButton("Thêm");
         inputPanel.add(btnThem, gbc);
 
-        // Search by MaLop
+
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -126,7 +144,7 @@ public class QuanLyLop extends JFrame {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Tên lớp
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -139,7 +157,7 @@ public class QuanLyLop extends JFrame {
         txtTenLop = new JTextField(15);
         inputPanel.add(txtTenLop, gbc);
 
-        // Sửa Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -147,7 +165,7 @@ public class QuanLyLop extends JFrame {
         btnSua = new JButton("Sửa");
         inputPanel.add(btnSua, gbc);
 
-        // Search by MaGVCN
+
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -167,7 +185,7 @@ public class QuanLyLop extends JFrame {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Trưởng lớp
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -180,7 +198,7 @@ public class QuanLyLop extends JFrame {
         txtTruongLop = new JTextField(15);
         inputPanel.add(txtTruongLop, gbc);
 
-        // Xóa Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -191,7 +209,7 @@ public class QuanLyLop extends JFrame {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Sĩ số
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -207,7 +225,7 @@ public class QuanLyLop extends JFrame {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Mã GVCN
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -220,13 +238,16 @@ public class QuanLyLop extends JFrame {
         txtMaGVCN = new JTextField(15);
         inputPanel.add(txtMaGVCN, gbc);
 
-        // Add the input panel to the frame
+
         add(inputPanel, BorderLayout.SOUTH);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new QuanLyLop().setVisible(true);
-        });
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnBackToHome) {
+            controller.navigateToTrangChu();
+        }
     }
+
+
 }

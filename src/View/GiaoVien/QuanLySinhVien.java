@@ -7,12 +7,15 @@ package View.GiaoVien;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import Controller.GiaoVienHomeController;
 
 /**
  *
  * @author rubik
  */
-public class QuanLySinhVien extends JFrame {
+public class QuanLySinhVien extends JFrame implements ActionListener {
 
     private JLabel lblTitle;
     private JTable dataTable;
@@ -53,12 +56,26 @@ public class QuanLySinhVien extends JFrame {
     private JTextField txtSearchXepLoai;
     private JButton btnSearchXepLoai;
 
+    private JButton btnBackToHome;
+
+    private GiaoVienHomeController controller;
+
     public QuanLySinhVien() {
         setTitle("Quản Lý Sinh Viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(950, 650); // Adjusted size for table and more search fields
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
+
+        controller = new GiaoVienHomeController(this);
+
+        // Create a panel for the back button and title
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+        // Back Button
+        btnBackToHome = new JButton("Quay lại trang chủ");
+        topPanel.add(btnBackToHome, BorderLayout.WEST);
+        btnBackToHome.addActionListener(this);
 
         // Title Label
         lblTitle = new JLabel("Quản Lý Sinh Viên", SwingConstants.CENTER);
@@ -88,11 +105,10 @@ public class QuanLySinhVien extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
+
         int row = 0;
 
-        // Mã sinh viên
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -105,7 +121,7 @@ public class QuanLySinhVien extends JFrame {
         txtMaSV = new JTextField(15);
         inputPanel.add(txtMaSV, gbc);
 
-        // Thêm Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -113,7 +129,7 @@ public class QuanLySinhVien extends JFrame {
         btnThem = new JButton("Thêm");
         inputPanel.add(btnThem, gbc);
 
-        // Search by MaSV
+
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -138,7 +154,7 @@ public class QuanLySinhVien extends JFrame {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Họ tên sinh viên
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -151,7 +167,7 @@ public class QuanLySinhVien extends JFrame {
         txtHoTenSV = new JTextField(15);
         inputPanel.add(txtHoTenSV, gbc);
 
-        // Sửa Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -159,7 +175,7 @@ public class QuanLySinhVien extends JFrame {
         btnSua = new JButton("Sửa");
         inputPanel.add(btnSua, gbc);
 
-        // Search by MaLop
+
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -179,7 +195,7 @@ public class QuanLySinhVien extends JFrame {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Giới tính
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -192,7 +208,7 @@ public class QuanLySinhVien extends JFrame {
         txtGioiTinh = new JTextField(15);
         inputPanel.add(txtGioiTinh, gbc);
 
-        // Xóa Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -200,7 +216,7 @@ public class QuanLySinhVien extends JFrame {
         btnXoa = new JButton("Xóa");
         inputPanel.add(btnXoa, gbc);
 
-        // Search by Diem Trung Binh
+
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -220,7 +236,7 @@ public class QuanLySinhVien extends JFrame {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Mã lớp (input field)
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -233,7 +249,7 @@ public class QuanLySinhVien extends JFrame {
         txtMaLop = new JTextField(15);
         inputPanel.add(txtMaLop, gbc);
 
-        // Tính điểm trung bình Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -241,7 +257,7 @@ public class QuanLySinhVien extends JFrame {
         btnTinhDiemTrungBinh = new JButton("Tính điểm trung bình");
         inputPanel.add(btnTinhDiemTrungBinh, gbc);
 
-        // Search by Xep Loai
+
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -261,7 +277,7 @@ public class QuanLySinhVien extends JFrame {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Ngày sinh
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -274,7 +290,7 @@ public class QuanLySinhVien extends JFrame {
         txtNgaySinh = new JTextField(15);
         inputPanel.add(txtNgaySinh, gbc);
 
-        // Xếp loại Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -285,7 +301,7 @@ public class QuanLySinhVien extends JFrame {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Nơi sinh
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -298,14 +314,17 @@ public class QuanLySinhVien extends JFrame {
         txtNoiSinh = new JTextField(15);
         inputPanel.add(txtNoiSinh, gbc);
 
-        // Add the input panel to the frame
+
         add(inputPanel, BorderLayout.SOUTH);
     }
 
-    public static void main(String[] args) {
-        // Run the GUI creation on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(() -> {
-            new QuanLySinhVien().setVisible(true);
-        });
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnBackToHome) {
+            controller.navigateToTrangChu();
+        }
+
     }
+
+
 }

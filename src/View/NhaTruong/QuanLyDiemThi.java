@@ -8,12 +8,15 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import Controller.NhaTruongHomeController;
 
 /**
  *
  * @author rubik
  */
-public class QuanLyDiemThi extends JFrame {
+public class QuanLyDiemThi extends JFrame implements ActionListener {
 
     private JLabel lblTitle;
     private JTable dataTable;
@@ -49,12 +52,26 @@ public class QuanLyDiemThi extends JFrame {
     private JTextField txtSearchDiem;
     private JButton btnSearchDiem;
 
+    private JButton btnBackToHome;
+
+    private NhaTruongHomeController controller;
+
     public QuanLyDiemThi() {
         setTitle("Quản Lý Điểm Thi");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(950, 650); // Adjusted size for consistency
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
+
+        controller = new NhaTruongHomeController(this);
+
+        // Create a panel for the back button and title
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+        // Back Button
+        btnBackToHome = new JButton("Quay lại trang chủ");
+        topPanel.add(btnBackToHome, BorderLayout.WEST);
+        btnBackToHome.addActionListener(this);
 
         // Title Label
         lblTitle = new JLabel("Quản Lý Điểm Thi", SwingConstants.CENTER);
@@ -262,9 +279,13 @@ public class QuanLyDiemThi extends JFrame {
         add(inputPanel, BorderLayout.SOUTH);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new QuanLyDiemThi().setVisible(true);
-        });
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnBackToHome) {
+            controller.navigateToTrangChu();
+        }
+        // Add action handling for other buttons here if needed
     }
+
+
 }

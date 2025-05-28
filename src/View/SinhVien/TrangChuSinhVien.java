@@ -8,12 +8,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import Controller.SinhVienHomeController;
+import View.SinhVien.XemKhoa;
+import View.SinhVien.XemLop;
+import View.SinhVien.XemMonHoc;
+import View.SinhVien.XemSinhVien;
 
 /**
  *
  * @author rubik
  */
-public class TrangChuSinhVien extends JFrame {
+public class TrangChuSinhVien extends JFrame implements ActionListener {
 
     private JLabel lblTitle;
     private JButton btnKhoa;
@@ -25,12 +30,16 @@ public class TrangChuSinhVien extends JFrame {
     private JButton btnLop;
     private JButton btnDangXuat;
 
+    private SinhVienHomeController controller;
+
     public TrangChuSinhVien() {
         setTitle("Trang chủ sinh viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 400); // Adjusted size
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
+
+        controller = new SinhVienHomeController(this);
 
         // Title Label
         lblTitle = new JLabel("Trang chủ", SwingConstants.CENTER);
@@ -71,11 +80,6 @@ public class TrangChuSinhVien extends JFrame {
         btnMonHoc = new JButton("Môn Học");
         buttonPanel.add(btnMonHoc, gbc);
 
-
-
-       
-        
-
         // Logout Button (positioned at bottom right)
         row++;
         col = 2; // Place in the rightmost column
@@ -87,11 +91,30 @@ public class TrangChuSinhVien extends JFrame {
         buttonPanel.add(btnDangXuat, gbc);
 
         add(buttonPanel, BorderLayout.CENTER);
+
+        // Add ActionListeners to buttons
+        btnKhoa.addActionListener(this);
+        btnSinhVien.addActionListener(this);
+        btnLop.addActionListener(this);
+        btnMonHoc.addActionListener(this);
+        // btnLichGiangDay and btnDiemThi are not in this view
+        btnDangXuat.addActionListener(this);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new TrangChuSinhVien().setVisible(true);
-        });
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnKhoa) {
+            controller.navigateToXemKhoa();
+        } else if (e.getSource() == btnSinhVien) {
+            controller.navigateToXemSinhVien();
+        } else if (e.getSource() == btnLop) {
+            controller.navigateToXemLop();
+        } else if (e.getSource() == btnMonHoc) {
+            controller.navigateToXemMonHoc();
+        } else if (e.getSource() == btnDangXuat) {
+            controller.handleLogout();
+        }
     }
+
+
 }
