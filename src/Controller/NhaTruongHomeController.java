@@ -21,12 +21,10 @@ import javax.swing.JFrame;
  */
 public class NhaTruongHomeController {
 
-    private TrangChuNhaTruong trangChuNhaTruong;
     private JFrame currentFrame;
 
-    public NhaTruongHomeController(TrangChuNhaTruong trangChuNhaTruong) {
-        this.trangChuNhaTruong = trangChuNhaTruong;
-        this.currentFrame = trangChuNhaTruong;
+    public NhaTruongHomeController(JFrame currentFrame) {
+        this.currentFrame = currentFrame;
     }
 
     private void navigateTo(JFrame targetFrame) {

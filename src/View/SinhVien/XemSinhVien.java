@@ -7,6 +7,9 @@ package View.SinhVien;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import Controller.SinhVienHomeController;
 
 /**
  *
@@ -36,6 +39,8 @@ public class XemSinhVien extends JFrame {
 
     private JButton btnBackToHome;
 
+    private SinhVienHomeController controller;
+
     public XemSinhVien() {
         setTitle("Xem Sinh Viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,12 +48,20 @@ public class XemSinhVien extends JFrame {
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
+        controller = new SinhVienHomeController(this);
+
         // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
 
         // Back Button
         btnBackToHome = new JButton("Quay về trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
+        btnBackToHome.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.navigateToTrangChu();
+            }
+        });
 
         // Title Label
         lblTitle = new JLabel("Xem Sinh Viên", SwingConstants.CENTER);
