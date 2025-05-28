@@ -6,25 +6,32 @@ package View.GiaoVien;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import Controller.GiaoVienController;
 
 /**
  *
  * @author rubik
  */
-public class DangNhapGiaoVien extends JFrame {
+public class DangNhapGiaoVien extends JFrame implements ActionListener {
 
     private JLabel lblUsername;
     private JLabel lblPassword;
     private JTextField txtUsername;
-    private JTextField txtPassword;
+    private JPasswordField txtPassword;
     private JButton btnLogin;
     private JButton btnExit;
+
+    private GiaoVienController controller;
 
     public DangNhapGiaoVien () {
         setTitle("Tài khoản giáo viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200);
         setLocationRelativeTo(null); // Center the window
+
+        controller = new GiaoVienController(this);
 
         // Create components
         lblUsername = new JLabel("Tên Đăng Nhập:");
@@ -33,6 +40,10 @@ public class DangNhapGiaoVien extends JFrame {
         txtPassword = new JPasswordField(15); // Use JPasswordField for password input
         btnLogin = new JButton("Đăng nhập");
         btnExit = new JButton("Thoát");
+
+        // Add ActionListener to login button
+        btnLogin.addActionListener(this);
+        btnExit.addActionListener(this);
 
         // Create panels for layout
         JPanel panel = new JPanel(new GridBagLayout());
@@ -71,6 +82,17 @@ public class DangNhapGiaoVien extends JFrame {
 
         // Add panel to the frame
         add(panel);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnLogin) {
+            String username = txtUsername.getText();
+            String password = new String(txtPassword.getPassword());
+            controller.handleLogin(username, password);
+        } else if (e.getSource() == btnExit) {
+            System.exit(0);
+        }
     }
 
     public static void main(String[] args) {
