@@ -12,6 +12,7 @@ public class ThanhVien {
     private String hoTen;
     private String chucVu;
     private String gioiTinh;
+    private String ngaySinh;
     
     public ThanhVien(){
         super();
@@ -25,6 +26,9 @@ public class ThanhVien {
     public void setGioiTinh(String a){
         this.gioiTinh = a;
     }
+    public void setNgaySinh(String a){
+        this.ngaySinh = a;
+    }
     public String getHoTen (){
         return this.hoTen;
     }
@@ -33,5 +37,8 @@ public class ThanhVien {
     }
     public String getChucVu (){
         return this.chucVu;
+    }
+    public String getNgaySinh(){
+        return this.ngaySinh;
     }
 }
