@@ -9,11 +9,14 @@ package Model;
  * @author rubik
  */
 public class SinhVien extends ThanhVien{
+<<<<<<< HEAD
     private String maHV;
     private String maLop;
     private String noiSinh;
     private float diemTB;
     private String xepLoai;
+=======
+>>>>>>> bb94f8072c4aa561b717f2def12abc109f1b92f2
     
     public SinhVien(){
         super();
