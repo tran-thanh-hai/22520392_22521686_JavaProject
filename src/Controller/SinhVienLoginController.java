@@ -4,8 +4,8 @@
  */
 package Controller;
 
-import View.NhaTruong.DangNhapNhaTruong;
-import View.NhaTruong.TrangChuNhaTruong;
+import View.SinhVien.DangNhapSinhVien;
+import View.SinhVien.TrangChuSinhVien;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -14,20 +14,20 @@ import javax.swing.SwingUtilities;
  *
  * @author rubik
  */
-public class NhaTruongController {
+public class SinhVienLoginController {
 
-    private DangNhapNhaTruong loginView;
+    private DangNhapSinhVien loginView;
 
-    public NhaTruongController(DangNhapNhaTruong loginView) {
+    public SinhVienLoginController(DangNhapSinhVien loginView) {
         this.loginView = loginView;
     }
 
     public void handleLogin(String username, String password) {
         // Placeholder login logic
         // In a real application, you would interact with a Model (e.g., database) here
-        if (username.equals("nhatruong") && password.equals("nhatruong")) { // Example credentials
+        if (username.equals("sinhvien") && password.equals("sinhvien")) { // Example credentials
             SwingUtilities.invokeLater(() -> {
-                TrangChuNhaTruong homeView = new TrangChuNhaTruong();
+                TrangChuSinhVien homeView = new TrangChuSinhVien();
                 homeView.setVisible(true);
                 loginView.dispose(); // Close login window
             });

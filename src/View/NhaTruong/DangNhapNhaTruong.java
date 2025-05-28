@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import Controller.NhaTruongController;
+import Controller.NhaTruongLoginController;
 
 /**
  *
@@ -23,7 +23,7 @@ public class DangNhapNhaTruong extends JFrame implements ActionListener {
     private JButton btnLogin;
     private JButton btnExit;
 
-    private NhaTruongController controller;
+    private NhaTruongLoginController controller;
 
     public DangNhapNhaTruong() {
         setTitle("Tài khoản trường");
@@ -31,7 +31,7 @@ public class DangNhapNhaTruong extends JFrame implements ActionListener {
         setSize(300, 200);
         setLocationRelativeTo(null); // Center the window
 
-        controller = new NhaTruongController(this);
+        controller = new NhaTruongLoginController(this);
 
         // Create components
         lblUsername = new JLabel("Tên Đăng Nhập:");
