@@ -5,6 +5,7 @@
 package View.NhaTruong;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 
@@ -15,7 +16,8 @@ import java.text.SimpleDateFormat;
 public class QuanLyMonHoc extends JFrame {
 
     private JLabel lblTitle;
-    private JTextArea dataArea;
+    private JTable dataTable;
+    private DefaultTableModel tableModel;
 
     // Labels and fields for course information
     private JLabel lblMaMH;
@@ -35,23 +37,23 @@ public class QuanLyMonHoc extends JFrame {
     private JButton btnXoa;
 
     // Search components
-    private JLabel lblSearchMaMH;
-    private JTextField txtSearchMaMH;
-    private JButton btnSearchMaMH;
-    private JLabel lblSearchTCLT;
-    private JTextField txtSearchTCLT;
-    private JButton btnSearchTCLT;
-    private JLabel lblSearchTCTH;
-    private JTextField txtSearchTCTH;
-    private JButton btnSearchTCTH;
-    private JLabel lblSearchMaKhoa;
-    private JTextField txtSearchMaKhoa;
-    private JButton btnSearchMaKhoa;
+    private JLabel lblSearchMaMHSearch;
+    private JTextField txtSearchMaMHSearch;
+    private JButton btnSearchMaMHSearch;
+    private JLabel lblSearchTCLTSearch;
+    private JTextField txtSearchTCLTSearch;
+    private JButton btnSearchTCLTSearch;
+    private JLabel lblSearchTCTHSearch;
+    private JTextField txtSearchTCTHSearch;
+    private JButton btnSearchTCTHSearch;
+    private JLabel lblSearchMaKhoaSearch;
+    private JTextField txtSearchMaKhoaSearch;
+    private JButton btnSearchMaKhoaSearch;
 
     public QuanLyMonHoc() {
         setTitle("Quản lý Môn học");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(850, 600); // Adjusted size
+        setSize(950, 650); // Adjusted size for table and more components
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
@@ -60,10 +62,18 @@ public class QuanLyMonHoc extends JFrame {
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         add(lblTitle, BorderLayout.NORTH);
 
-        // Data Display Area
-        dataArea = new JTextArea();
-        dataArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(dataArea);
+        // Data Display Area (using JTable)
+        tableModel = new DefaultTableModel();
+        // Define table columns based on MONHOC SQL table
+        tableModel.addColumn("Mã MH");
+        tableModel.addColumn("Tên MH");
+        tableModel.addColumn("Tín chỉ lý thuyết");
+        tableModel.addColumn("Tín chỉ thực hành");
+        tableModel.addColumn("Mã khoa");
+
+        dataTable = new JTable(tableModel);
+        dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
         // Input and Action Panel
@@ -73,6 +83,7 @@ public class QuanLyMonHoc extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Add components to inputPanel using GridBagLayout
+        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields/Buttons
         int row = 0;
 
         // Mã môn học
@@ -101,15 +112,15 @@ public class QuanLyMonHoc extends JFrame {
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        lblSearchMaMH = new JLabel("Tìm kiếm theo mã môn học:");
-        inputPanel.add(lblSearchMaMH, gbc);
+        lblSearchMaMHSearch = new JLabel("Tìm kiếm theo mã môn học:");
+        inputPanel.add(lblSearchMaMHSearch, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchMaMH = new JTextField(10);
-        inputPanel.add(txtSearchMaMH, gbc);
+        txtSearchMaMHSearch = new JTextField(10);
+        inputPanel.add(txtSearchMaMHSearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -140,15 +151,15 @@ public class QuanLyMonHoc extends JFrame {
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        lblSearchTCLT = new JLabel("Tìm kiếm theo tín chỉ lý thuyết:");
-        inputPanel.add(lblSearchTCLT, gbc);
+        lblSearchTCLTSearch = new JLabel("Tìm kiếm theo tín chỉ lý thuyết:");
+        inputPanel.add(lblSearchTCLTSearch, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchTCLT = new JTextField(10);
-        inputPanel.add(txtSearchTCLT, gbc);
+        txtSearchTCLTSearch = new JTextField(10);
+        inputPanel.add(txtSearchTCLTSearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -179,15 +190,15 @@ public class QuanLyMonHoc extends JFrame {
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        lblSearchTCTH = new JLabel("Tìm kiếm theo tín chỉ thực hành:");
-        inputPanel.add(lblSearchTCTH, gbc);
+        lblSearchTCTHSearch = new JLabel("Tìm kiếm theo tín chỉ thực hành:");
+        inputPanel.add(lblSearchTCTHSearch, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchTCTH = new JTextField(10);
-        inputPanel.add(txtSearchTCTH, gbc);
+        txtSearchTCTHSearch = new JTextField(10);
+        inputPanel.add(txtSearchTCTHSearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -210,15 +221,15 @@ public class QuanLyMonHoc extends JFrame {
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        lblSearchMaKhoa = new JLabel("Tìm kiếm theo mã khoa:");
-        inputPanel.add(lblSearchMaKhoa, gbc);
+        lblSearchMaKhoaSearch = new JLabel("Tìm kiếm theo mã khoa:");
+        inputPanel.add(lblSearchMaKhoaSearch, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchMaKhoa = new JTextField(10);
-        inputPanel.add(txtSearchMaKhoa, gbc);
+        txtSearchMaKhoaSearch = new JTextField(10);
+        inputPanel.add(txtSearchMaKhoaSearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;

@@ -5,6 +5,7 @@
 package View.NhaTruong;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 
@@ -15,7 +16,8 @@ import java.text.SimpleDateFormat;
 public class QuanLyGiaoVien extends JFrame {
 
     private JLabel lblTitle;
-    private JTextArea dataArea;
+    private JTable dataTable;
+    private DefaultTableModel tableModel;
 
     // Labels and fields for teacher information
     private JLabel lblMaGV;
@@ -49,9 +51,9 @@ public class QuanLyGiaoVien extends JFrame {
     private JLabel lblSearchChucVu;
     private JTextField txtSearchChucVu;
     private JButton btnSearchChucVu;
-    private JLabel lblSearchMaKhoa;
-    private JTextField txtSearchMaKhoa;
-    private JButton btnSearchMaKhoa;
+    private JLabel lblSearchMaKhoaSearch;
+    private JTextField txtSearchMaKhoaSearch;
+    private JButton btnSearchMaKhoaSearch;
     private JLabel lblSearchHeSoLuong;
     private JTextField txtSearchHeSoLuong;
     private JButton btnSearchHeSoLuong;
@@ -59,7 +61,7 @@ public class QuanLyGiaoVien extends JFrame {
     public QuanLyGiaoVien() {
         setTitle("Quản Lý Giáo Viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600); // Adjusted size for more components
+        setSize(1000, 600); // Adjusted size for table and more fields
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
@@ -68,10 +70,23 @@ public class QuanLyGiaoVien extends JFrame {
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         add(lblTitle, BorderLayout.NORTH);
 
-        // Data Display Area (using JTextArea for simplicity, JTable would be better for structured data)
-        dataArea = new JTextArea();
-        dataArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(dataArea);
+        // Data Display Area (using JTable)
+        tableModel = new DefaultTableModel();
+        // Define table columns based on GIAOVIEN SQL table
+        tableModel.addColumn("Mã GV");
+        tableModel.addColumn("Họ Tên");
+        tableModel.addColumn("Chức vụ");
+        tableModel.addColumn("Giới tính");
+        tableModel.addColumn("Mã khoa");
+        tableModel.addColumn("Ngày sinh");
+        tableModel.addColumn("Ngày vào làm");
+        tableModel.addColumn("Hệ số lương");
+        tableModel.addColumn("Lương cơ bản");
+        tableModel.addColumn("Lương");
+
+        dataTable = new JTable(tableModel);
+        dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
         // Input and Action Panel
@@ -81,7 +96,7 @@ public class QuanLyGiaoVien extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons
+        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields/Buttons
         int row = 0;
 
         // Mã giáo viên
@@ -188,15 +203,15 @@ public class QuanLyGiaoVien extends JFrame {
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        lblSearchMaKhoa = new JLabel("Tìm kiếm theo mã khoa:");
-        inputPanel.add(lblSearchMaKhoa, gbc);
+        lblSearchMaKhoaSearch = new JLabel("Tìm kiếm theo mã khoa:");
+        inputPanel.add(lblSearchMaKhoaSearch, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchMaKhoa = new JTextField(10);
-        inputPanel.add(txtSearchMaKhoa, gbc);
+        txtSearchMaKhoaSearch = new JTextField(10);
+        inputPanel.add(txtSearchMaKhoaSearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;

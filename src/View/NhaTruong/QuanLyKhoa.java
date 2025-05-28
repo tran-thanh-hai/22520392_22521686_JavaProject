@@ -5,7 +5,9 @@
 package View.NhaTruong;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -15,7 +17,8 @@ import java.awt.*;
 public class QuanLyKhoa extends JFrame {
 
     private JLabel lblTitle;
-    private JTextArea dataArea;
+    private JTable dataTable;
+    private DefaultTableModel tableModel;
 
     private JLabel lblMaKhoa;
     private JTextField txtMaKhoa;
@@ -30,14 +33,14 @@ public class QuanLyKhoa extends JFrame {
     private JButton btnSua;
     private JButton btnXoa;
 
-    private JLabel lblSearchMaKhoa;
-    private JTextField txtSearchMaKhoa;
-    private JButton btnSearchMaKhoa;
+    private JLabel lblSearchMaKhoaSearch;
+    private JTextField txtSearchMaKhoaSearch;
+    private JButton btnSearchMaKhoaSearch;
 
     public QuanLyKhoa() {
         setTitle("Quản Lý Khoa");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 500);
+        setSize(900, 550);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -47,9 +50,15 @@ public class QuanLyKhoa extends JFrame {
         add(lblTitle, BorderLayout.NORTH);
 
         // Khu vực hiển thị dữ liệu
-        dataArea = new JTextArea();
-        dataArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(dataArea);
+        tableModel = new DefaultTableModel();
+        tableModel.addColumn("Mã khoa");
+        tableModel.addColumn("Tên khoa");
+        tableModel.addColumn("Ngày thành lập");
+        tableModel.addColumn("Trưởng khoa");
+
+        dataTable = new JTable(tableModel);
+        dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
         // Panel nhập liệu và nút hành động
@@ -78,17 +87,17 @@ public class QuanLyKhoa extends JFrame {
 
         gbc.gridx = 3;
         gbc.anchor = GridBagConstraints.EAST;
-        lblSearchMaKhoa = new JLabel("Tìm kiếm theo mã khoa:");
-        inputPanel.add(lblSearchMaKhoa, gbc);
+        lblSearchMaKhoaSearch = new JLabel("Tìm kiếm theo mã khoa:");
+        inputPanel.add(lblSearchMaKhoaSearch, gbc);
 
         gbc.gridx = 4;
         gbc.anchor = GridBagConstraints.WEST;
-        txtSearchMaKhoa = new JTextField(10);
-        inputPanel.add(txtSearchMaKhoa, gbc);
+        txtSearchMaKhoaSearch = new JTextField(10);
+        inputPanel.add(txtSearchMaKhoaSearch, gbc);
 
         gbc.gridx = 5;
-        btnSearchMaKhoa = new JButton("Tìm");
-        inputPanel.add(btnSearchMaKhoa, gbc);
+        btnSearchMaKhoaSearch = new JButton("Tìm");
+        inputPanel.add(btnSearchMaKhoaSearch, gbc);
 
         // Tên khoa
         row++;

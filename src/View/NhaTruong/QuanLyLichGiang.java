@@ -5,6 +5,7 @@
 package View.NhaTruong;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 
@@ -15,7 +16,8 @@ import java.text.SimpleDateFormat;
 public class QuanLyLichGiang extends JFrame {
 
     private JLabel lblTitle;
-    private JTextArea dataArea;
+    private JTable dataTable;
+    private DefaultTableModel tableModel;
 
     // Labels and fields for schedule information
     private JLabel lblMaLop;
@@ -39,26 +41,26 @@ public class QuanLyLichGiang extends JFrame {
     private JButton btnXoa;
 
     // Search components
-    private JLabel lblSearchMaLop;
-    private JTextField txtSearchMaLop;
-    private JButton btnSearchMaLop;
-    private JLabel lblSearchMaMH;
-    private JTextField txtSearchMaMH;
-    private JButton btnSearchMaMH;
-    private JLabel lblSearchMaGV;
-    private JTextField txtSearchMaGV;
-    private JButton btnSearchMaGV;
-    private JLabel lblSearchHocKy;
-    private JTextField txtSearchHocKy;
-    private JButton btnSearchHocKy;
-    private JLabel lblSearchNam;
-    private JTextField txtSearchNam;
-    private JButton btnSearchNam;
+    private JLabel lblSearchMaLopSearch;
+    private JTextField txtSearchMaLopSearch;
+    private JButton btnSearchMaLopSearch;
+    private JLabel lblSearchMaMHSearch;
+    private JTextField txtSearchMaMHSearch;
+    private JButton btnSearchMaMHSearch;
+    private JLabel lblSearchMaGVSearch;
+    private JTextField txtSearchMaGVSearch;
+    private JButton btnSearchMaGVSearch;
+    private JLabel lblSearchHocKySearch;
+    private JTextField txtSearchHocKySearch;
+    private JButton btnSearchHocKySearch;
+    private JLabel lblSearchNamSearch;
+    private JTextField txtSearchNamSearch;
+    private JButton btnSearchNamSearch;
 
     public QuanLyLichGiang() {
         setTitle("Quản Lý Lịch Giảng");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 600); // Adjusted size
+        setSize(1000, 600); // Adjusted size for table
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
@@ -67,10 +69,20 @@ public class QuanLyLichGiang extends JFrame {
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         add(lblTitle, BorderLayout.NORTH);
 
-        // Data Display Area
-        dataArea = new JTextArea();
-        dataArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(dataArea);
+        // Data Display Area (using JTable)
+        tableModel = new DefaultTableModel();
+        // Define table columns based on GIANGDAY SQL table
+        tableModel.addColumn("Mã lớp");
+        tableModel.addColumn("Mã MH");
+        tableModel.addColumn("Mã GV");
+        tableModel.addColumn("Học kỳ");
+        tableModel.addColumn("Năm");
+        tableModel.addColumn("Từ ngày");
+        tableModel.addColumn("Đến ngày");
+
+        dataTable = new JTable(tableModel);
+        dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
         // Input and Action Panel
@@ -80,6 +92,7 @@ public class QuanLyLichGiang extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Add components to inputPanel using GridBagLayout
+        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields/Buttons
         int row = 0;
 
         // Mã lớp
@@ -108,15 +121,15 @@ public class QuanLyLichGiang extends JFrame {
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        lblSearchMaLop = new JLabel("Tìm kiếm theo mã lớp:");
-        inputPanel.add(lblSearchMaLop, gbc);
+        lblSearchMaLopSearch = new JLabel("Tìm kiếm theo mã lớp:");
+        inputPanel.add(lblSearchMaLopSearch, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchMaLop = new JTextField(10);
-        inputPanel.add(txtSearchMaLop, gbc);
+        txtSearchMaLopSearch = new JTextField(10);
+        inputPanel.add(txtSearchMaLopSearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -147,15 +160,15 @@ public class QuanLyLichGiang extends JFrame {
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        lblSearchMaMH = new JLabel("Tìm kiếm theo mã môn học:");
-        inputPanel.add(lblSearchMaMH, gbc);
+        lblSearchMaMHSearch = new JLabel("Tìm kiếm theo mã môn học:");
+        inputPanel.add(lblSearchMaMHSearch, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchMaMH = new JTextField(10);
-        inputPanel.add(txtSearchMaMH, gbc);
+        txtSearchMaMHSearch = new JTextField(10);
+        inputPanel.add(txtSearchMaMHSearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -186,15 +199,15 @@ public class QuanLyLichGiang extends JFrame {
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        lblSearchMaGV = new JLabel("Tìm kiếm theo mã giáo viên:");
-        inputPanel.add(lblSearchMaGV, gbc);
+        lblSearchMaGVSearch = new JLabel("Tìm kiếm theo mã giáo viên:");
+        inputPanel.add(lblSearchMaGVSearch, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchMaGV = new JTextField(10);
-        inputPanel.add(txtSearchMaGV, gbc);
+        txtSearchMaGVSearch = new JTextField(10);
+        inputPanel.add(txtSearchMaGVSearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -217,15 +230,15 @@ public class QuanLyLichGiang extends JFrame {
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        lblSearchHocKy = new JLabel("Tìm kiếm theo học kỳ:");
-        inputPanel.add(lblSearchHocKy, gbc);
+        lblSearchHocKySearch = new JLabel("Tìm kiếm theo học kỳ:");
+        inputPanel.add(lblSearchHocKySearch, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchHocKy = new JTextField(10);
-        inputPanel.add(txtSearchHocKy, gbc);
+        txtSearchHocKySearch = new JTextField(10);
+        inputPanel.add(txtSearchHocKySearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -248,15 +261,15 @@ public class QuanLyLichGiang extends JFrame {
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        lblSearchNam = new JLabel("Tìm kiếm theo năm:");
-        inputPanel.add(lblSearchNam, gbc);
+        lblSearchNamSearch = new JLabel("Tìm kiếm theo năm:");
+        inputPanel.add(lblSearchNamSearch, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchNam = new JTextField(10);
-        inputPanel.add(txtSearchNam, gbc);
+        txtSearchNamSearch = new JTextField(10);
+        inputPanel.add(txtSearchNamSearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
