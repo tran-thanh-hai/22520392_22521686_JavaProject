@@ -162,12 +162,7 @@ public class QuanLyLop extends JFrame {
         txtSearchMaGVSearch = new JTextField(10);
         inputPanel.add(txtSearchMaGVSearch, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchMaGVSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchMaGVSearch, gbc);
+
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;

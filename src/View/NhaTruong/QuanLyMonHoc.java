@@ -168,12 +168,7 @@ public class QuanLyMonHoc extends JFrame {
         txtSearchTCLTSearch = new JTextField(10);
         inputPanel.add(txtSearchTCLTSearch, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchTCLTSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchTCLTSearch, gbc);
+
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -214,12 +209,7 @@ public class QuanLyMonHoc extends JFrame {
         txtSearchTCTHSearch = new JTextField(10);
         inputPanel.add(txtSearchTCTHSearch, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchTCTHSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchTCTHSearch, gbc);
+
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -252,12 +242,7 @@ public class QuanLyMonHoc extends JFrame {
         txtSearchMaKhoaSearch = new JTextField(10);
         inputPanel.add(txtSearchMaKhoaSearch, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchMaKhoaSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchMaKhoaSearch, gbc);
+
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;

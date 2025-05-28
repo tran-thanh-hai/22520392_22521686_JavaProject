@@ -7,7 +7,6 @@ package View.NhaTruong;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 
 /**
  *

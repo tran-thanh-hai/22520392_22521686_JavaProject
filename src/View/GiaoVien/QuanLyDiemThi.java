@@ -5,128 +5,267 @@
 package View.GiaoVien;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 
 /**
  *
  * @author rubik
  */
-public class QuanLyDiem extends JFrame {
+public class QuanLyDiemThi extends JFrame {
 
-    private JTextField maHvField;
-    private JTextField maMhField;
-    private JTextField lanThiField;
-    private JTextField ngayThiField;
-    private JTextField diemField;
-    private JTextField kquaField;
+    private JLabel lblTitle;
+    private JTable dataTable;
+    private DefaultTableModel tableModel;
 
-    private JButton addButton;
-    private JButton editButton;
-    private JButton deleteButton;
-    private JButton searchButton; // Generic search button
+    // Labels and fields for exam result information
+    private JLabel lblMaHV;
+    private JTextField txtMaHV;
+    private JLabel lblMaMH;
+    private JTextField txtMaMH;
+    private JLabel lblLanThi;
+    private JTextField txtLanThi;
+    private JLabel lblNgayThi;
+    private JTextField txtNgayThi;
+    private JLabel lblDiem;
+    private JTextField txtDiem;
+    private JLabel lblKetQua;
+    private JTextField txtKetQua;
 
-    private JTextArea dataDisplayArea; // Using JTextArea as a placeholder, can be replaced by JTable
+    // Action buttons
+    private JButton btnThem;
+    private JButton btnSua;
+    private JButton btnXoa;
 
-    public QuanLyDiem() {
+    // Search components
+    private JLabel lblSearchMaMH;
+    private JTextField txtSearchMaMH;
+    private JButton btnSearchMaMH;
+    private JLabel lblSearchLanThi;
+    private JTextField txtSearchLanThi;
+    private JButton btnSearchLanThi;
+    private JLabel lblSearchDiem;
+    private JTextField txtSearchDiem;
+    private JButton btnSearchDiem;
+
+    public QuanLyDiemThi() {
         setTitle("Quản Lý Điểm Thi");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(950, 650); // Adjusted size for consistency
+        setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
-        // Top Panel for data display (placeholder)
-        JPanel topPanel = new JPanel(new BorderLayout());
-        dataDisplayArea = new JTextArea();
-        JScrollPane scrollPane = new JScrollPane(dataDisplayArea);
-        topPanel.setBorder(BorderFactory.createTitledBorder("Exam Results Data")); // Optional title
-        topPanel.add(scrollPane, BorderLayout.CENTER);
-        add(topPanel, BorderLayout.CENTER);
+        // Title Label
+        lblTitle = new JLabel("Quản Lý Điểm Thi", SwingConstants.CENTER);
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
+        add(lblTitle, BorderLayout.NORTH);
 
-        // Bottom Panel for input fields and buttons
-        JPanel bottomPanel = new JPanel(new GridBagLayout());
+        // Data Display Area (using JTable)
+        tableModel = new DefaultTableModel();
+        // Define table columns (replace with actual column names from your data)
+        tableModel.addColumn("Mã HV");
+        tableModel.addColumn("Mã MH");
+        tableModel.addColumn("Lần thi");
+        tableModel.addColumn("Ngày thi");
+        tableModel.addColumn("Điểm");
+        tableModel.addColumn("Kết quả");
+
+        dataTable = new JTable(tableModel);
+        dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(dataTable);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Input and Action Panel
+        JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Padding
+        gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Row 1: Mã HV
+        // Add components to inputPanel using GridBagLayout
+        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
+        int row = 0;
+
+        // Mã HV
         gbc.gridx = 0;
-        gbc.gridy = 0;
-        bottomPanel.add(new JLabel("Mã HV:"), gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        lblMaHV = new JLabel("Mã HV:");
+        inputPanel.add(lblMaHV, gbc);
+
         gbc.gridx = 1;
-        maHvField = new JTextField(15);
-        bottomPanel.add(maHvField, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        txtMaHV = new JTextField(15);
+        inputPanel.add(txtMaHV, gbc);
 
+        // Thêm Button
         gbc.gridx = 2;
-        addButton = new JButton("Thêm");
-        bottomPanel.add(addButton, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
+        btnThem = new JButton("Thêm");
+        inputPanel.add(btnThem, gbc);
 
+        // Search by MaMH
         gbc.gridx = 3;
-        searchButton = new JButton("Tìm kiếm"); // Generic search button
-        bottomPanel.add(searchButton, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.fill = GridBagConstraints.NONE;
+        lblSearchMaMH = new JLabel("Tìm kiếm theo mã môn học:");
+        inputPanel.add(lblSearchMaMH, gbc);
+
         gbc.gridx = 4;
-        searchTenField = new JTextField(15);
-        bottomPanel.add(searchTenField, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        txtSearchMaMH = new JTextField(10);
+        inputPanel.add(txtSearchMaMH, gbc);
 
-        // Row 2: Mã MH
+        gbc.gridx = 5;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+        btnSearchMaMH = new JButton("Tìm");
+        inputPanel.add(btnSearchMaMH, gbc);
+
+        row++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Mã MH
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        bottomPanel.add(new JLabel("Mã MH:"), gbc);
-        gbc.gridx = 1;
-        maMhField = new JTextField(15);
-        bottomPanel.add(maMhField, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        lblMaMH = new JLabel("Mã MH:");
+        inputPanel.add(lblMaMH, gbc);
 
+        gbc.gridx = 1;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        txtMaMH = new JTextField(15);
+        inputPanel.add(txtMaMH, gbc);
+
+        // Sửa Button
         gbc.gridx = 2;
-        editButton = new JButton("Sửa");
-        bottomPanel.add(editButton, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
+        btnSua = new JButton("Sửa");
+        inputPanel.add(btnSua, gbc);
 
-        // Row 3: Lần thi
+        // Search by LanThi
+        gbc.gridx = 3;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.fill = GridBagConstraints.NONE;
+        lblSearchLanThi = new JLabel("Tìm kiếm theo lần thi:");
+        inputPanel.add(lblSearchLanThi, gbc);
+
+        gbc.gridx = 4;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        txtSearchLanThi = new JTextField(10);
+        inputPanel.add(txtSearchLanThi, gbc);
+
+
+
+        row++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Lần thi
         gbc.gridx = 0;
-        gbc.gridy = 2;
-        bottomPanel.add(new JLabel("Lần thi:"), gbc);
-        gbc.gridx = 1;
-        lanThiField = new JTextField(15);
-        bottomPanel.add(lanThiField, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        lblLanThi = new JLabel("Lần thi:");
+        inputPanel.add(lblLanThi, gbc);
 
+        gbc.gridx = 1;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        txtLanThi = new JTextField(15);
+        inputPanel.add(txtLanThi, gbc);
+
+        // Xóa Button
         gbc.gridx = 2;
-        deleteButton = new JButton("Xoá");
-        bottomPanel.add(deleteButton, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
+        btnXoa = new JButton("Xóa");
+        inputPanel.add(btnXoa, gbc);
 
-        // Row 4: Ngày thi
+        // Search by Diem
+        gbc.gridx = 3;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.fill = GridBagConstraints.NONE;
+        lblSearchDiem = new JLabel("Tìm kiếm theo điểm thi:");
+        inputPanel.add(lblSearchDiem, gbc);
+
+        gbc.gridx = 4;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        txtSearchDiem = new JTextField(10);
+        inputPanel.add(txtSearchDiem, gbc);
+
+
+
+        row++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Ngày thi
         gbc.gridx = 0;
-        gbc.gridy = 3;
-        bottomPanel.add(new JLabel("Ngày thi:"), gbc);
-        gbc.gridx = 1;
-        ngayThiField = new JTextField(15);
-        bottomPanel.add(ngayThiField, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        lblNgayThi = new JLabel("Ngày thi:");
+        inputPanel.add(lblNgayThi, gbc);
 
-        // Row 5: Điểm
+        gbc.gridx = 1;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        txtNgayThi = new JTextField(15);
+        inputPanel.add(txtNgayThi, gbc);
+
+        row++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Điểm
         gbc.gridx = 0;
-        gbc.gridy = 4;
-        bottomPanel.add(new JLabel("Điểm:"), gbc);
-        gbc.gridx = 1;
-        diemField = new JTextField(15);
-        bottomPanel.add(diemField, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        lblDiem = new JLabel("Điểm:");
+        inputPanel.add(lblDiem, gbc);
 
-        // Row 6: Kết quả
+        gbc.gridx = 1;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        txtDiem = new JTextField(15);
+        inputPanel.add(txtDiem, gbc);
+
+        row++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Kết quả
         gbc.gridx = 0;
-        gbc.gridy = 5;
-        bottomPanel.add(new JLabel("Kết quả:"), gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        lblKetQua = new JLabel("Kết quả:");
+        inputPanel.add(lblKetQua, gbc);
+
         gbc.gridx = 1;
-        kquaField = new JTextField(15);
-        bottomPanel.add(kquaField, gbc);
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        txtKetQua = new JTextField(15);
+        inputPanel.add(txtKetQua, gbc);
 
-        add(bottomPanel, BorderLayout.SOUTH);
-
-        pack(); // Adjusts the window size to fit the components
-        setLocationRelativeTo(null); // Center the window
+        // Add the input panel to the frame
+        add(inputPanel, BorderLayout.SOUTH);
     }
 
     public static void main(String[] args) {
-        // Run the GUI creation on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new QuanLyDiem().setVisible(true);
-            }
+        SwingUtilities.invokeLater(() -> {
+            new QuanLyDiemThi().setVisible(true);
         });
     }
 }

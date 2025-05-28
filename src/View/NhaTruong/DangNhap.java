@@ -21,7 +21,7 @@ public class DangNhap extends JFrame {
     private JButton btnExit;
 
     public DangNhap() {
-        setTitle("Đăng Nhập Hệ Thống");
+        setTitle("Đăng Nhập");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200);
         setLocationRelativeTo(null); // Center the window

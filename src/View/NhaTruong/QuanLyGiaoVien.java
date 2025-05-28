@@ -43,6 +43,7 @@ public class QuanLyGiaoVien extends JFrame {
     private JButton btnThem;
     private JButton btnSua;
     private JButton btnXoa;
+    private JButton btnTinhLuong;
 
     // Search components
     private JLabel lblSearchMaGVSearch;
@@ -99,7 +100,7 @@ public class QuanLyGiaoVien extends JFrame {
         // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
         int row = 0;
 
-        // Mã giáo viên
+        // Mã giáo viên (Row 0)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -112,7 +113,7 @@ public class QuanLyGiaoVien extends JFrame {
         txtMaGV = new JTextField(15);
         inputPanel.add(txtMaGV, gbc);
 
-        // Thêm Button
+        // Thêm Button (Row 0)
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -120,7 +121,7 @@ public class QuanLyGiaoVien extends JFrame {
         btnThem = new JButton("Thêm");
         inputPanel.add(btnThem, gbc);
 
-        // Search by MaGV
+        // Search by MaGV (Row 0)
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -142,10 +143,10 @@ public class QuanLyGiaoVien extends JFrame {
         btnSearchMaGVSearch = new JButton("Tìm");
         inputPanel.add(btnSearchMaGVSearch, gbc);
 
-        row++;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        row++; // Increment row for the next group
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Reset fill to horizontal for text fields
 
-        // Họ tên
+        // Họ tên (Row 1)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -158,7 +159,7 @@ public class QuanLyGiaoVien extends JFrame {
         txtHoTen = new JTextField(15);
         inputPanel.add(txtHoTen, gbc);
 
-        // Sửa Button
+        // Sửa Button (Row 1)
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -166,7 +167,7 @@ public class QuanLyGiaoVien extends JFrame {
         btnSua = new JButton("Sửa");
         inputPanel.add(btnSua, gbc);
 
-        // Search by ChucVu
+        // Search by ChucVu (Row 1)
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -188,10 +189,10 @@ public class QuanLyGiaoVien extends JFrame {
         btnSearchChucVuSearch = new JButton("Tìm");
         inputPanel.add(btnSearchChucVuSearch, gbc);
 
-        row++;
+        row++; // Increment row
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Chức vụ
+        // Chức vụ (Row 2)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -204,7 +205,7 @@ public class QuanLyGiaoVien extends JFrame {
         txtChucVu = new JTextField(15);
         inputPanel.add(txtChucVu, gbc);
 
-        // Xóa Button
+        // Xóa Button (Row 2)
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -212,45 +213,7 @@ public class QuanLyGiaoVien extends JFrame {
         btnXoa = new JButton("Xóa");
         inputPanel.add(btnXoa, gbc);
 
-        // Search by MaKhoa
-        gbc.gridx = 3;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.fill = GridBagConstraints.NONE;
-        lblSearchMaKhoaSearch = new JLabel("Tìm kiếm theo mã khoa:");
-        inputPanel.add(lblSearchMaKhoaSearch, gbc);
-
-        gbc.gridx = 4;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchMaKhoaSearch = new JTextField(10);
-        inputPanel.add(txtSearchMaKhoaSearch, gbc);
-
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchMaKhoaSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchMaKhoaSearch, gbc);
-
-        row++;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Giới tính
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        lblGioiTinh = new JLabel("Giới tính:");
-        inputPanel.add(lblGioiTinh, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        txtGioiTinh = new JTextField(15);
-        inputPanel.add(txtGioiTinh, gbc);
-
-        // Search by HeSoLuong
+        // Search by HeSoLuong (Row 2)
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -272,10 +235,56 @@ public class QuanLyGiaoVien extends JFrame {
         btnSearchHeSoLuongSearch = new JButton("Tìm");
         inputPanel.add(btnSearchHeSoLuongSearch, gbc);
 
-        row++;
+        row++; // Increment row
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Mã khoa
+        // Giới tính (Row 3)
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        lblGioiTinh = new JLabel("Giới tính:");
+        inputPanel.add(lblGioiTinh, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        txtGioiTinh = new JTextField(15);
+        inputPanel.add(txtGioiTinh, gbc);
+
+        // Tinh luong button (Row 3)
+        gbc.gridx = 2;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
+        btnTinhLuong = new JButton("Tính lương");
+        inputPanel.add(btnTinhLuong, gbc);
+
+        // Search by MaKhoa (Row 3)
+        gbc.gridx = 3;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.fill = GridBagConstraints.NONE;
+        lblSearchMaKhoaSearch = new JLabel("Tìm kiếm theo mã khoa:");
+        inputPanel.add(lblSearchMaKhoaSearch, gbc);
+
+        gbc.gridx = 4;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        txtSearchMaKhoaSearch = new JTextField(10);
+        inputPanel.add(txtSearchMaKhoaSearch, gbc);
+
+        gbc.gridx = 5;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+        btnSearchMaKhoaSearch = new JButton("Tìm");
+        inputPanel.add(btnSearchMaKhoaSearch, gbc);
+
+        row++; // Increment row
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Mã khoa (input field) (Row 4)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -288,9 +297,9 @@ public class QuanLyGiaoVien extends JFrame {
         txtMaKhoa = new JTextField(15);
         inputPanel.add(txtMaKhoa, gbc);
 
-        row++;
+        row++; // Increment row
 
-        // Ngày sinh
+        // Ngày sinh (Row 5)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -303,9 +312,9 @@ public class QuanLyGiaoVien extends JFrame {
         txtNgaySinh = new JTextField(15);
         inputPanel.add(txtNgaySinh, gbc);
 
-        row++;
+        row++; // Increment row
 
-        // Ngày vào làm
+        // Ngày vào làm (Row 6)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -318,9 +327,9 @@ public class QuanLyGiaoVien extends JFrame {
         txtNgayVaoLam = new JTextField(15);
         inputPanel.add(txtNgayVaoLam, gbc);
 
-        row++;
+        row++; // Increment row
 
-        // Hệ số lương
+        // Hệ số lương (Row 7)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -333,9 +342,9 @@ public class QuanLyGiaoVien extends JFrame {
         txtHeSoLuong = new JTextField(15);
         inputPanel.add(txtHeSoLuong, gbc);
 
-        row++;
+        row++; // Increment row
 
-        // Lương cơ bản
+        // Lương cơ bản (Row 8)
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;

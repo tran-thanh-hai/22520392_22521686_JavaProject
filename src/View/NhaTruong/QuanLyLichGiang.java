@@ -177,12 +177,7 @@ public class QuanLyLichGiang extends JFrame {
         txtSearchMaMHSearch = new JTextField(10);
         inputPanel.add(txtSearchMaMHSearch, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchMaMHSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchMaMHSearch, gbc);
+ 
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -223,12 +218,7 @@ public class QuanLyLichGiang extends JFrame {
         txtSearchMaGVSearch = new JTextField(10);
         inputPanel.add(txtSearchMaGVSearch, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchMaGVSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchMaGVSearch, gbc);
+
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -261,12 +251,7 @@ public class QuanLyLichGiang extends JFrame {
         txtSearchHocKySearch = new JTextField(10);
         inputPanel.add(txtSearchHocKySearch, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchHocKySearch = new JButton("Tìm");
-        inputPanel.add(btnSearchHocKySearch, gbc);
+
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -299,12 +284,7 @@ public class QuanLyLichGiang extends JFrame {
         txtSearchNamSearch = new JTextField(10);
         inputPanel.add(txtSearchNamSearch, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchNamSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchNamSearch, gbc);
+
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;

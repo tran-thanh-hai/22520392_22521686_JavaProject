@@ -168,13 +168,7 @@ public class QuanLyDiemThi extends JFrame {
         txtSearchLanThi = new JTextField(10);
         inputPanel.add(txtSearchLanThi, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchLanThi = new JButton("Tìm");
-        inputPanel.add(btnSearchLanThi, gbc);
-
+        
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
@@ -214,12 +208,7 @@ public class QuanLyDiemThi extends JFrame {
         txtSearchDiem = new JTextField(10);
         inputPanel.add(txtSearchDiem, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchDiem = new JButton("Tìm");
-        inputPanel.add(btnSearchDiem, gbc);
+  
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
