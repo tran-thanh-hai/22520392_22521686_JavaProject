@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.GiaoVienLoginController;
+import View.DangNhapChungView;
 
 /**
  *
@@ -29,28 +30,28 @@ public class DangNhapGiaoVien extends JFrame implements ActionListener {
         setTitle("Tài khoản giáo viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200);
-        setLocationRelativeTo(null); // Center the window
+        setLocationRelativeTo(null); 
 
         controller = new GiaoVienLoginController(this);
 
-        // Create components
+
         lblUsername = new JLabel("Tên Đăng Nhập:");
         lblPassword = new JLabel("Mật Khẩu:");
         txtUsername = new JTextField(15);
-        txtPassword = new JPasswordField(15); // Use JPasswordField for password input
+        txtPassword = new JPasswordField(15); 
         btnLogin = new JButton("Đăng nhập");
-        btnExit = new JButton("Thoát");
+        btnExit = new JButton("Quay lại");
 
-        // Add ActionListener to login button
+
         btnLogin.addActionListener(this);
         btnExit.addActionListener(this);
 
-        // Create panels for layout
+
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
+        gbc.insets = new Insets(5, 5, 5, 5); 
 
-        // Add components to panel using GridBagLayout
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.EAST;
@@ -73,14 +74,14 @@ public class DangNhapGiaoVien extends JFrame implements ActionListener {
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        gbc.gridwidth = 2; // Span across two columns
+        gbc.gridwidth = 2; 
         gbc.anchor = GridBagConstraints.CENTER;
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(btnLogin);
         buttonPanel.add(btnExit);
         panel.add(buttonPanel, gbc);
 
-        // Add panel to the frame
+
         add(panel);
     }
 
@@ -91,13 +92,12 @@ public class DangNhapGiaoVien extends JFrame implements ActionListener {
             String password = new String(txtPassword.getPassword());
             controller.handleLogin(username, password);
         } else if (e.getSource() == btnExit) {
-            System.exit(0);
+
+            DangNhapChungView commonLoginView = new DangNhapChungView();
+            commonLoginView.setVisible(true);
+            this.dispose(); 
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new DangNhapGiaoVien().setVisible(true);
-        });
-    }
+
 }

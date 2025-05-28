@@ -199,9 +199,5 @@ public class XemMonHoc extends JFrame implements ActionListener {
         // Add action handling for other buttons here if needed
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new XemMonHoc().setVisible(true);
-        });
-    }
+
 }

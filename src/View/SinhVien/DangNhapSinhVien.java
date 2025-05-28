@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.SinhVienLoginController;
+import View.DangNhapChungView;
 
 /**
  *
@@ -39,7 +40,7 @@ public class DangNhapSinhVien extends JFrame implements ActionListener {
         txtUsername = new JTextField(15);
         txtPassword = new JPasswordField(15); // Use JPasswordField for password input
         btnLogin = new JButton("Đăng nhập");
-        btnExit = new JButton("Thoát");
+        btnExit = new JButton("Quay lại");
 
         // Add ActionListeners to buttons
         btnLogin.addActionListener(this);
@@ -91,13 +92,12 @@ public class DangNhapSinhVien extends JFrame implements ActionListener {
             String password = new String(txtPassword.getPassword());
             controller.handleLogin(username, password);
         } else if (e.getSource() == btnExit) {
-            System.exit(0);
+            // Navigate back to DangNhapChungView
+            DangNhapChungView commonLoginView = new DangNhapChungView();
+            commonLoginView.setVisible(true);
+            this.dispose(); // Close the current frame
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new DangNhapSinhVien().setVisible(true);
-        });
-    }
+
 }

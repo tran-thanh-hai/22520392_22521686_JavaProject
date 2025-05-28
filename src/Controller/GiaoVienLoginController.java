@@ -6,7 +6,6 @@ package Controller;
 
 import View.GiaoVien.DangNhapGiaoVien;
 import View.GiaoVien.TrangChuGiaoVien;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -16,20 +15,19 @@ import javax.swing.SwingUtilities;
  */
 public class GiaoVienLoginController {
 
-    private DangNhapGiaoVien loginView;
+    private final DangNhapGiaoVien loginView;
 
     public GiaoVienLoginController(DangNhapGiaoVien loginView) {
         this.loginView = loginView;
     }
 
+    // Ten dang nhap va Mat khau
     public void handleLogin(String username, String password) {
-        // Placeholder login logic
-        // In a real application, you would interact with a Model (e.g., database) here
-        if (username.equals("giaovien") && password.equals("giaovien")) { // Example credentials
+        if (username.equals("giaovien") && password.equals("giaovien")) { 
             SwingUtilities.invokeLater(() -> {
                 TrangChuGiaoVien homeView = new TrangChuGiaoVien();
                 homeView.setVisible(true);
-                loginView.dispose(); // Close login window
+                loginView.dispose(); 
             });
         } else {
             JOptionPane.showMessageDialog(loginView, "Tên đăng nhập hoặc mật khẩu không đúng.", "Lỗi Đăng Nhập", JOptionPane.ERROR_MESSAGE);

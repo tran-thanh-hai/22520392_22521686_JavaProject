@@ -330,10 +330,5 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         // Add action handling for other buttons here if needed
     }
 
-    public static void main(String[] args) {
-        // Run the GUI creation on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(() -> {
-            new QuanLySinhVien().setVisible(true);
-        });
-    }
+
 }

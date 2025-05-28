@@ -229,9 +229,5 @@ public class XemLichGiang extends JFrame implements ActionListener {
         // Add action handling for other buttons here if needed
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new XemLichGiang().setVisible(true);
-        });
-    }
+
 }

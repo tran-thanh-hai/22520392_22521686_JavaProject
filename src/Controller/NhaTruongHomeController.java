@@ -12,6 +12,7 @@ import View.NhaTruong.QuanLyLop;
 import View.NhaTruong.QuanLyMonHoc;
 import View.NhaTruong.QuanLySinhVien;
 import View.NhaTruong.TrangChuNhaTruong;
+import View.DangNhapChungView;
 
 import javax.swing.JFrame;
 
@@ -28,9 +29,9 @@ public class NhaTruongHomeController {
     }
 
     private void navigateTo(JFrame targetFrame) {
-        currentFrame.dispose(); // Close the current frame
-        targetFrame.setVisible(true); // Show the target frame
-        currentFrame = targetFrame; // Update the current frame reference
+        currentFrame.dispose(); 
+        targetFrame.setVisible(true); 
+        currentFrame = targetFrame; 
     }
 
     public void navigateToQuanLyKhoa() {
@@ -62,16 +63,10 @@ public class NhaTruongHomeController {
     }
 
     public void navigateToTrangChu() {
-         // Assumes a new instance of TrangChuNhaTruong is created, 
-         // which might not be ideal if state needs to be preserved.
-         // A better approach would be to pass the existing instance 
-         // or use a more sophisticated navigation system.
         navigateTo(new TrangChuNhaTruong());
     }
 
     public void handleLogout() {
-        // TODO: Implement logout logic
-        System.out.println("Logout clicked");
-        System.exit(0);
+        navigateTo(new DangNhapChungView());
     }
 }

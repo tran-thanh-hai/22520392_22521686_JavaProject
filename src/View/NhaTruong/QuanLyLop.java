@@ -4,6 +4,7 @@
  */
 package View.NhaTruong;
 
+import Controller.NhaTruongHomeController;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -256,9 +257,5 @@ public class QuanLyLop extends JFrame implements ActionListener {
         // Add action handling for other buttons here if needed
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new QuanLyLop().setVisible(true);
-        });
-    }
+
 }

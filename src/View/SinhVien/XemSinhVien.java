@@ -197,10 +197,5 @@ public class XemSinhVien extends JFrame {
         add(inputPanel, BorderLayout.SOUTH);
     }
 
-    public static void main(String[] args) {
-        // Run the GUI creation on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(() -> {
-            new XemSinhVien().setVisible(true);
-        });
-    }
+
 }

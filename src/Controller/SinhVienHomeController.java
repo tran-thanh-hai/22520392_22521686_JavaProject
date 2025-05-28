@@ -5,6 +5,7 @@ import View.SinhVien.XemLop;
 import View.SinhVien.XemMonHoc;
 import View.SinhVien.XemSinhVien;
 import View.SinhVien.TrangChuSinhVien;
+import View.DangNhapChungView;
 
 import javax.swing.JFrame;
 
@@ -17,13 +18,12 @@ public class SinhVienHomeController {
     }
 
     private void navigateTo(JFrame targetFrame) {
-        currentFrame.dispose(); // Close the current frame
-        targetFrame.setVisible(true); // Show the target frame
-        currentFrame = targetFrame; // Update the current frame reference
+        currentFrame.dispose(); 
+        targetFrame.setVisible(true); 
+        currentFrame = targetFrame; 
     }
 
     public void navigateToTrangChu() {
-        // Assumes a new instance is created, which might not be ideal if state needs to be preserved.
         navigateTo(new TrangChuSinhVien());
     }
 
@@ -44,8 +44,6 @@ public class SinhVienHomeController {
     }
 
     public void handleLogout() {
-        // TODO: Implement logout logic
-        System.out.println("Logout clicked");
-        System.exit(0);
+        navigateTo(new DangNhapChungView());
     }
 } 

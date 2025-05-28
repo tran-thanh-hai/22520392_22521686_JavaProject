@@ -108,11 +108,10 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
+
         int row = 0;
 
-        // Mã sinh viên
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -125,7 +124,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtMaSV = new JTextField(15);
         inputPanel.add(txtMaSV, gbc);
 
-        // Thêm Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -133,7 +132,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         btnThem = new JButton("Thêm");
         inputPanel.add(btnThem, gbc);
 
-        // Search by MaSV
+
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -158,7 +157,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Họ tên sinh viên
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -171,7 +170,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtHoTenSV = new JTextField(15);
         inputPanel.add(txtHoTenSV, gbc);
 
-        // Sửa Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -179,7 +178,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         btnSua = new JButton("Sửa");
         inputPanel.add(btnSua, gbc);
 
-        // Search by MaLop
+
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -199,7 +198,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Giới tính
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -212,7 +211,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtGioiTinh = new JTextField(15);
         inputPanel.add(txtGioiTinh, gbc);
 
-        // Xóa Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -220,7 +219,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         btnXoa = new JButton("Xóa");
         inputPanel.add(btnXoa, gbc);
 
-        // Search by Diem Trung Binh
+
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -240,7 +239,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Mã lớp (input field)
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -253,7 +252,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtMaLop = new JTextField(15);
         inputPanel.add(txtMaLop, gbc);
 
-        // Tính điểm trung bình Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -261,7 +260,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         btnTinhDiemTrungBinh = new JButton("Tính điểm trung bình");
         inputPanel.add(btnTinhDiemTrungBinh, gbc);
 
-        // Search by Xep Loai
+
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -281,7 +280,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Ngày sinh
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -294,7 +293,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtNgaySinh = new JTextField(15);
         inputPanel.add(txtNgaySinh, gbc);
 
-        // Xếp loại Button
+
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -305,7 +304,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Nơi sinh
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -318,7 +317,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtNoiSinh = new JTextField(15);
         inputPanel.add(txtNoiSinh, gbc);
 
-        // Add the input panel to the frame
+
         add(inputPanel, BorderLayout.SOUTH);
     }
 
@@ -327,13 +326,8 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
         }
-        // Add action handling for other buttons here if needed
+
     }
 
-    public static void main(String[] args) {
-        // Run the GUI creation on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(() -> {
-            new QuanLySinhVien().setVisible(true);
-        });
-    }
+
 }
