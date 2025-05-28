@@ -11,7 +11,7 @@ import java.awt.*;
  *
  * @author rubik
  */
-public class DangNhap extends JFrame {
+public class DangNhapSinhVien extends JFrame {
 
     private JLabel lblUsername;
     private JLabel lblPassword;
@@ -20,8 +20,8 @@ public class DangNhap extends JFrame {
     private JButton btnLogin;
     private JButton btnExit;
 
-    public DangNhap() {
-        setTitle("Đăng Nhập");
+    public DangNhapSinhVien() {
+        setTitle("Tài khoản sinh viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200);
         setLocationRelativeTo(null); // Center the window
@@ -75,7 +75,7 @@ public class DangNhap extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new DangNhap().setVisible(true);
+            new DangNhapSinhVien().setVisible(true);
         });
     }
 }
