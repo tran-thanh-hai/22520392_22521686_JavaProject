@@ -7,13 +7,16 @@ package View.SinhVien;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import Controller.SinhVienHomeController;
 
 /**
  *
  * @author rubik
  */
-public class XemLop extends JFrame {
+public class XemLop extends JFrame implements ActionListener {
 
     private JLabel lblTitle;
     private JTable dataTable;
@@ -31,6 +34,8 @@ public class XemLop extends JFrame {
 
     private JButton btnBackToHome;
 
+    private SinhVienHomeController controller;
+
     public XemLop() {
         setTitle("Xem Lớp");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,12 +43,15 @@ public class XemLop extends JFrame {
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
+        controller = new SinhVienHomeController(this);
+
         // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
 
         // Back Button
         btnBackToHome = new JButton("Quay về trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
+        btnBackToHome.addActionListener(this);
 
         // Title Label
         lblTitle = new JLabel("Xem Lớp", SwingConstants.CENTER);
@@ -134,6 +142,14 @@ public class XemLop extends JFrame {
 
         // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnBackToHome) {
+            controller.navigateToTrangChu();
+        }
+        // Add action handling for other buttons here if needed
     }
 
     public static void main(String[] args) {

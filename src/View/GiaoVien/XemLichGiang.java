@@ -7,13 +7,16 @@ package View.GiaoVien;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import Controller.GiaoVienHomeController;
 
 /**
  *
  * @author rubik
  */
-public class XemLichGiang extends JFrame {
+public class XemLichGiang extends JFrame implements ActionListener {
 
     private JLabel lblTitle;
     private JTable dataTable;
@@ -41,6 +44,8 @@ public class XemLichGiang extends JFrame {
 
     private JButton btnBackToHome;
 
+    private GiaoVienHomeController controller;
+
     public XemLichGiang() {
         setTitle("Xem Lịch Giảng");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,12 +53,15 @@ public class XemLichGiang extends JFrame {
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
+        controller = new GiaoVienHomeController(this);
+
         // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
 
         // Back Button
         btnBackToHome = new JButton("Quay lại trang chủ");
         topPanel.add(btnBackToHome, BorderLayout.WEST);
+        btnBackToHome.addActionListener(this);
 
         // Title Label
         lblTitle = new JLabel("Quản Lý Lịch Giảng", SwingConstants.CENTER);
@@ -211,6 +219,14 @@ public class XemLichGiang extends JFrame {
 
         // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnBackToHome) {
+            controller.navigateToTrangChu();
+        }
+        // Add action handling for other buttons here if needed
     }
 
     public static void main(String[] args) {

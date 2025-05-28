@@ -8,12 +8,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import Controller.NhaTruongHomeController;
 
 /**
  *
  * @author rubik
  */
-public class TrangChuNhaTruong extends JFrame {
+public class TrangChuNhaTruong extends JFrame implements ActionListener {
 
     private JLabel lblTitle;
     private JButton btnKhoa;
@@ -25,12 +26,16 @@ public class TrangChuNhaTruong extends JFrame {
     private JButton btnLop;
     private JButton btnDangXuat;
 
+    private NhaTruongHomeController controller;
+
     public TrangChuNhaTruong() {
         setTitle("Trang chủ Nhà Trường");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 400); // Adjusted size
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
+
+        controller = new NhaTruongHomeController(this);
 
         // Title Label
         lblTitle = new JLabel("Trang chủ", SwingConstants.CENTER);
@@ -99,7 +104,38 @@ public class TrangChuNhaTruong extends JFrame {
         btnDangXuat = new JButton("Đăng xuất");
         buttonPanel.add(btnDangXuat, gbc);
 
+        // Add ActionListeners to buttons
+        btnKhoa.addActionListener(this);
+        btnGiaoVien.addActionListener(this);
+        btnSinhVien.addActionListener(this);
+        btnMonHoc.addActionListener(this);
+        btnLichGiangDay.addActionListener(this);
+        btnDiemThi.addActionListener(this);
+        btnLop.addActionListener(this);
+        btnDangXuat.addActionListener(this);
+
         add(buttonPanel, BorderLayout.CENTER);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnKhoa) {
+            controller.navigateToQuanLyKhoa();
+        } else if (e.getSource() == btnGiaoVien) {
+            controller.navigateToQuanLyGiaoVien();
+        } else if (e.getSource() == btnSinhVien) {
+            controller.navigateToQuanLySinhVien();
+        } else if (e.getSource() == btnMonHoc) {
+            controller.navigateToQuanLyMonHoc();
+        } else if (e.getSource() == btnLichGiangDay) {
+            controller.navigateToQuanLyLichGiang();
+        } else if (e.getSource() == btnDiemThi) {
+            controller.navigateToQuanLyDiemThi();
+        } else if (e.getSource() == btnLop) {
+            controller.navigateToQuanLyLop();
+        } else if (e.getSource() == btnDangXuat) {
+            controller.handleLogout();
+        }
     }
 
     public static void main(String[] args) {
