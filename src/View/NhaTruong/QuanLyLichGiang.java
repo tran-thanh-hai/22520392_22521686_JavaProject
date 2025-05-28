@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.NhaTruongHomeController;
+import DAO.LichGiangDAO;
+import Model.LichGiang;
+import java.util.List;
 
 /**
  *
@@ -63,6 +66,9 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
     private JButton btnBackToHome;
 
     private NhaTruongHomeController controller;
+
+    // Thêm biến DAO
+    private LichGiangDAO lichGiangDAO;
 
     public QuanLyLichGiang() {
         setTitle("Quản Lý Lịch Giảng");
@@ -359,15 +365,231 @@ public class QuanLyLichGiang extends JFrame implements ActionListener {
 
         // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
+
+        // Khởi tạo DAO
+        lichGiangDAO = new LichGiangDAO();
+        
+        // Thêm ActionListener cho các nút
+        btnThem.addActionListener(this);
+        btnSua.addActionListener(this);
+        btnXoa.addActionListener(this);
+        btnSearchMaLopSearch.addActionListener(this);
+        btnSearchMaMHSearch.addActionListener(this);
+        btnSearchMaGVSearch.addActionListener(this);
+        btnSearchHocKySearch.addActionListener(this);
+        btnSearchNamSearch.addActionListener(this);
+        
+        // Thêm ListSelectionListener cho bảng
+        dataTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = dataTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    displaySelectedRow(selectedRow);
+                }
+            }
+        });
+        
+        // Load dữ liệu ban đầu
+        loadDataToTable();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnThem) {
+            themLichGiang();
+        } else if (e.getSource() == btnSua) {
+            suaLichGiang();
+        } else if (e.getSource() == btnXoa) {
+            xoaLichGiang();
+        } else if (e.getSource() == btnSearchMaLopSearch) {
+            timTheoMaLop();
+        } else if (e.getSource() == btnSearchMaMHSearch) {
+            timTheoMaMH();
+        } else if (e.getSource() == btnSearchMaGVSearch) {
+            timTheoMaGV();
+        } else if (e.getSource() == btnSearchHocKySearch) {
+            timTheoHocKy();
+        } else if (e.getSource() == btnSearchNamSearch) {
+            timTheoNam();
         }
-        // Add action handling for other buttons here if needed
     }
 
+    // Thêm các phương thức xử lý
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<LichGiang> dsLichGiang = lichGiangDAO.getAllLichGiang();
+        for (LichGiang lg : dsLichGiang) {
+            addLichGiangToTable(lg);
+        }
+    }
 
+    private void addLichGiangToTable(LichGiang lg) {
+        Object[] row = {
+            lg.getMaLop(),
+            lg.getMaMH(),
+            lg.getMaGV(),
+            lg.getHocKy(),
+            lg.getNam(),
+            lg.getNgBatDau(),
+            lg.getNgKetThuc()
+        };
+        tableModel.addRow(row);
+    }
+
+    private void displaySelectedRow(int row) {
+        txtMaLop.setText(tableModel.getValueAt(row, 0).toString());
+        txtMaMH.setText(tableModel.getValueAt(row, 1).toString());
+        txtMaGV.setText(tableModel.getValueAt(row, 2).toString());
+        txtHocKy.setText(tableModel.getValueAt(row, 3).toString());
+        txtNam.setText(tableModel.getValueAt(row, 4).toString());
+        txtTuNgay.setText(tableModel.getValueAt(row, 5).toString());
+        txtDenNgay.setText(tableModel.getValueAt(row, 6).toString());
+    }
+
+    private LichGiang layThongTinTuForm() {
+        LichGiang lg = new LichGiang();
+        lg.setMaLop(txtMaLop.getText().trim());
+        lg.setMaMH(txtMaMH.getText().trim());
+        lg.setMaGV(txtMaGV.getText().trim());
+        lg.setHocKy(txtHocKy.getText().trim());
+        lg.setNam(Integer.parseInt(txtNam.getText().trim()));
+        lg.setNgBatDau(txtTuNgay.getText().trim());
+        lg.setNgKetThuc(txtDenNgay.getText().trim());
+        return lg;
+    }
+
+    private void xoaForm() {
+        txtMaLop.setText("");
+        txtMaMH.setText("");
+        txtMaGV.setText("");
+        txtHocKy.setText("");
+        txtNam.setText("");
+        txtTuNgay.setText("");
+        txtDenNgay.setText("");
+    }
+
+    // Thêm các phương thức xử lý sự kiện
+    private void themLichGiang() {
+        try {
+            LichGiang lg = layThongTinTuForm();
+            if (lichGiangDAO.themLichGiang(lg)) {
+                JOptionPane.showMessageDialog(this, "Thêm lịch giảng thành công!");
+                loadDataToTable();
+                xoaForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm lịch giảng thất bại!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
+        }
+    }
+
+    private void suaLichGiang() {
+        try {
+            LichGiang lg = layThongTinTuForm();
+            if (lichGiangDAO.suaLichGiang(lg)) {
+                JOptionPane.showMessageDialog(this, "Cập nhật lịch giảng thành công!");
+                loadDataToTable();
+                xoaForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật lịch giảng thất bại!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
+        }
+    }
+
+    private void xoaLichGiang() {
+        String maLop = txtMaLop.getText().trim();
+        String maMH = txtMaMH.getText().trim();
+        String maGV = txtMaGV.getText().trim();
+        
+        if (maLop.isEmpty() || maMH.isEmpty() || maGV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn lịch giảng cần xóa!");
+            return;
+        }
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc muốn xóa lịch giảng này?", 
+            "Xác nhận xóa", 
+            JOptionPane.YES_NO_OPTION);
+            
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (lichGiangDAO.xoaLichGiang(maLop, maMH, maGV)) {
+                JOptionPane.showMessageDialog(this, "Xóa lịch giảng thành công!");
+                loadDataToTable();
+                xoaForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Xóa lịch giảng thất bại!");
+            }
+        }
+    }
+
+    private void timTheoMaLop() {
+        String maLop = txtSearchMaLopSearch.getText().trim();
+        if (maLop.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã lớp cần tìm!");
+            return;
+        }
+        
+        List<LichGiang> ketQua = lichGiangDAO.timTheoMaLop(maLop);
+        hienThiKetQuaTimKiem(ketQua);
+    }
+
+    private void timTheoMaMH() {
+        String maMH = txtSearchMaMHSearch.getText().trim();
+        if (maMH.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã môn học cần tìm!");
+            return;
+        }
+        
+        List<LichGiang> ketQua = lichGiangDAO.timTheoMaMH(maMH);
+        hienThiKetQuaTimKiem(ketQua);
+    }
+
+    private void timTheoMaGV() {
+        String maGV = txtSearchMaGVSearch.getText().trim();
+        if (maGV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã giáo viên cần tìm!");
+            return;
+        }
+        
+        List<LichGiang> ketQua = lichGiangDAO.timTheoMaGV(maGV);
+        hienThiKetQuaTimKiem(ketQua);
+    }
+
+    private void timTheoHocKy() {
+        String hocKy = txtSearchHocKySearch.getText().trim();
+        if (hocKy.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập học kỳ cần tìm!");
+            return;
+        }
+        
+        List<LichGiang> ketQua = lichGiangDAO.timTheoHocKy(hocKy);
+        hienThiKetQuaTimKiem(ketQua);
+    }
+
+    private void timTheoNam() {
+        try {
+            int nam = Integer.parseInt(txtSearchNamSearch.getText().trim());
+            List<LichGiang> ketQua = lichGiangDAO.timTheoNam(nam);
+            hienThiKetQuaTimKiem(ketQua);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập năm hợp lệ!");
+        }
+    }
+
+    private void hienThiKetQuaTimKiem(List<LichGiang> dsLichGiang) {
+        tableModel.setRowCount(0);
+        if (!dsLichGiang.isEmpty()) {
+            for (LichGiang lg : dsLichGiang) {
+                addLichGiangToTable(lg);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy kết quả nào!");
+            loadDataToTable();
+        }
+    }
 }

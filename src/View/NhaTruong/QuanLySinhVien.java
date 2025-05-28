@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.NhaTruongHomeController;
+import DAO.SinhVienDAO;
+import Model.SinhVien;
+import java.util.List;
 
 /**
  *
@@ -26,6 +29,8 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
     private JTextField txtMaSV;
     private JLabel lblHoTenSV;
     private JTextField txtHoTenSV;
+    private JLabel lblChucVu;
+    private JTextField txtChucVu;
     private JLabel lblGioiTinh;
     private JTextField txtGioiTinh;
     private JLabel lblMaLop;
@@ -41,17 +46,19 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
     private JButton btnXoa;
     private JButton btnTinhDiemTrungBinh;
     private JButton btnXepLoai;
+    private JButton btnTinhDiemTrungBinhTatCa;
+    private JButton btnXepLoaiTatCa;
 
     // Search components
-    private JLabel lblSearchMaSVSearch;
-    private JTextField txtSearchMaSVSearch;
-    private JButton btnSearchMaSVSearch;
-    private JLabel lblSearchMaLopSearch;
-    private JTextField txtSearchMaLopSearch;
-    private JButton btnSearchMaLopSearch;
-    private JLabel lblSearchDiemTrungBinh;
-    private JTextField txtSearchDiemTrungBinh;
-    private JButton btnSearchDiemTrungBinh;
+    private JLabel lblSearchMaSV;
+    private JTextField txtSearchMaSV;
+    private JButton btnSearchMaSV;
+    private JLabel lblSearchMaLop;
+    private JTextField txtSearchMaLop;
+    private JButton btnSearchMaLop;
+    private JLabel lblSearchDiemTB;
+    private JTextField txtSearchDiemTB;
+    private JButton btnSearchDiemTB;
     private JLabel lblSearchXepLoai;
     private JTextField txtSearchXepLoai;
     private JButton btnSearchXepLoai;
@@ -60,14 +67,20 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
 
     private NhaTruongHomeController controller;
 
+    // Thêm đối tượng SinhVienDAO
+    private SinhVienDAO sinhVienDAO;
+
     public QuanLySinhVien() {
         setTitle("Quản Lý Sinh Viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(950, 650); // Adjusted size for table and more search fields
-        setLocationRelativeTo(null); // Center the window
+        setSize(1200, 700);
+        setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
         controller = new NhaTruongHomeController(this);
+
+        // Khởi tạo SinhVienDAO trong constructor
+        sinhVienDAO = new SinhVienDAO();
 
         // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -79,17 +92,35 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
 
         // Title Label
         lblTitle = new JLabel("Quản Lý Sinh Viên", SwingConstants.CENTER);
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
         topPanel.add(lblTitle, BorderLayout.CENTER);
 
         // Add the top panel to the frame
         add(topPanel, BorderLayout.NORTH);
 
         // Data Display Area (using JTable)
+        initializeTable();
+
+        // Input and Action Panel
+        JPanel inputPanel = createInputPanel();
+        add(inputPanel, BorderLayout.SOUTH);
+
+        // Panel chứa bảng dữ liệu
+        JScrollPane scrollPane = new JScrollPane(dataTable);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Thêm action listeners
+        addActionListeners();
+
+        // Load dữ liệu ban đầu
+        loadDataToTable();
+    }
+
+    private void initializeTable() {
         tableModel = new DefaultTableModel();
-        // Define table columns (replace with actual column names from your data)
         tableModel.addColumn("Mã sinh viên");
         tableModel.addColumn("Họ tên sinh viên");
+        tableModel.addColumn("Chức vụ");
         tableModel.addColumn("Giới tính");
         tableModel.addColumn("Mã lớp");
         tableModel.addColumn("Ngày sinh");
@@ -99,236 +130,375 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
 
         dataTable = new JTable(tableModel);
         dataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        JScrollPane scrollPane = new JScrollPane(dataTable);
-        add(scrollPane, BorderLayout.CENTER);
+        
+        // Thêm listener cho việc chọn dòng trong bảng
+        dataTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = dataTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    displaySelectedRow(selectedRow);
+                }
+            }
+        });
+    }
 
-        // Input and Action Panel
+    private JPanel createInputPanel() {
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
-        int row = 0;
+        // Khởi tạo components
+        initializeComponents();
 
-        // Mã sinh viên
+        // Thêm components vào panel
+        // Cột 1: Labels và TextFields
+        addInputComponents(inputPanel, gbc);
+
+        // Cột 2: Buttons
+        addActionButtons(inputPanel, gbc);
+
+        // Cột 3: Search components
+        addSearchComponents(inputPanel, gbc);
+
+        return inputPanel;
+    }
+
+    private void initializeComponents() {
+        // Labels
+        lblMaSV = new JLabel("Mã sinh viên:");
+        lblHoTenSV = new JLabel("Họ tên sinh viên:");
+        lblChucVu = new JLabel("Chức vụ:");
+        lblGioiTinh = new JLabel("Giới tính:");
+        lblMaLop = new JLabel("Mã lớp:");
+        lblNgaySinh = new JLabel("Ngày sinh:");
+        lblNoiSinh = new JLabel("Nơi sinh:");
+
+        // TextFields
+        txtMaSV = new JTextField(15);
+        txtHoTenSV = new JTextField(15);
+        txtChucVu = new JTextField(15);
+        txtGioiTinh = new JTextField(15);
+        txtMaLop = new JTextField(15);
+        txtNgaySinh = new JTextField(15);
+        txtNoiSinh = new JTextField(15);
+
+        // Buttons
+        btnThem = new JButton("Thêm");
+        btnSua = new JButton("Sửa");
+        btnXoa = new JButton("Xóa");
+        btnTinhDiemTrungBinh = new JButton("Tính điểm trung bình");
+        btnXepLoai = new JButton("Xếp loại");
+        btnTinhDiemTrungBinhTatCa = new JButton("Tính điểm TB tất cả");
+        btnXepLoaiTatCa = new JButton("Xếp loại tất cả");
+
+        // Search components
+        lblSearchMaSV = new JLabel("Tìm theo mã SV:");
+        lblSearchMaLop = new JLabel("Tìm theo mã lớp:");
+        txtSearchMaSV = new JTextField(10);
+        txtSearchMaLop = new JTextField(10);
+        btnSearchMaSV = new JButton("Tìm");
+        btnSearchMaLop = new JButton("Tìm");
+    }
+
+    private void addInputComponents(JPanel panel, GridBagConstraints gbc) {
+        // Thêm các components vào panel theo thứ tự
+        int row = 0;
+        
+        addComponent(panel, lblMaSV, txtMaSV, gbc, row++);
+        addComponent(panel, lblHoTenSV, txtHoTenSV, gbc, row++);
+        addComponent(panel, lblChucVu, txtChucVu, gbc, row++);
+        addComponent(panel, lblGioiTinh, txtGioiTinh, gbc, row++);
+        addComponent(panel, lblMaLop, txtMaLop, gbc, row++);
+        addComponent(panel, lblNgaySinh, txtNgaySinh, gbc, row++);
+        addComponent(panel, lblNoiSinh, txtNoiSinh, gbc, row);
+    }
+
+    private void addComponent(JPanel panel, JLabel label, JTextField textField, GridBagConstraints gbc, int row) {
         gbc.gridx = 0;
         gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        lblMaSV = new JLabel("Mã sinh viên:");
-        inputPanel.add(lblMaSV, gbc);
+        panel.add(label, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        txtMaSV = new JTextField(15);
-        inputPanel.add(txtMaSV, gbc);
+        panel.add(textField, gbc);
+    }
 
-        // Thêm Button
+    private void addActionButtons(JPanel panel, GridBagConstraints gbc) {
+        JPanel buttonPanel = new JPanel(new GridLayout(7, 1, 5, 5));
+        buttonPanel.add(btnThem);
+        buttonPanel.add(btnSua);
+        buttonPanel.add(btnXoa);
+        buttonPanel.add(btnTinhDiemTrungBinh);
+        buttonPanel.add(btnTinhDiemTrungBinhTatCa);
+        buttonPanel.add(btnXepLoai);
+        buttonPanel.add(btnXepLoaiTatCa);
+
         gbc.gridx = 2;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.NONE;
-        btnThem = new JButton("Thêm");
-        inputPanel.add(btnThem, gbc);
+        gbc.gridy = 0;
+        gbc.gridheight = 7;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel.add(buttonPanel, gbc);
+    }
 
-        // Search by MaSV
+    private void addSearchComponents(JPanel panel, GridBagConstraints gbc) {
+        gbc.gridheight = 1;
+        
+        // Tìm theo mã SV
         gbc.gridx = 3;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.fill = GridBagConstraints.NONE;
-        lblSearchMaSVSearch = new JLabel("Tìm kiếm theo mã sinh viên:");
-        inputPanel.add(lblSearchMaSVSearch, gbc);
-
+        gbc.gridy = 0;
+        panel.add(lblSearchMaSV, gbc);
+        
         gbc.gridx = 4;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchMaSVSearch = new JTextField(10);
-        inputPanel.add(txtSearchMaSVSearch, gbc);
+        panel.add(txtSearchMaSV, gbc);
         
         gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchMaSVSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchMaSVSearch, gbc);
+        panel.add(btnSearchMaSV, gbc);
 
-        row++;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Họ tên sinh viên
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        lblHoTenSV = new JLabel("Họ tên sinh viên:");
-        inputPanel.add(lblHoTenSV, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        txtHoTenSV = new JTextField(15);
-        inputPanel.add(txtHoTenSV, gbc);
-
-        // Sửa Button
-        gbc.gridx = 2;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSua = new JButton("Sửa");
-        inputPanel.add(btnSua, gbc);
-
-        // Search by MaLop
+        // Tìm theo mã lớp
         gbc.gridx = 3;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.fill = GridBagConstraints.NONE;
-        lblSearchMaLopSearch = new JLabel("Tìm kiếm theo mã lớp:");
-        inputPanel.add(lblSearchMaLopSearch, gbc);
-
+        gbc.gridy = 1;
+        panel.add(lblSearchMaLop, gbc);
+        
         gbc.gridx = 4;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchMaLopSearch = new JTextField(10);
-        inputPanel.add(txtSearchMaLopSearch, gbc);
+        panel.add(txtSearchMaLop, gbc);
+        
+        gbc.gridx = 5;
+        panel.add(btnSearchMaLop, gbc);
+    }
 
-
-
-        row++;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Giới tính
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        lblGioiTinh = new JLabel("Giới tính:");
-        inputPanel.add(lblGioiTinh, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        txtGioiTinh = new JTextField(15);
-        inputPanel.add(txtGioiTinh, gbc);
-
-        // Xóa Button
-        gbc.gridx = 2;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.NONE;
-        btnXoa = new JButton("Xóa");
-        inputPanel.add(btnXoa, gbc);
-
-        // Search by Diem Trung Binh
-        gbc.gridx = 3;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.fill = GridBagConstraints.NONE;
-        lblSearchDiemTrungBinh = new JLabel("Tìm kiếm theo điểm trung bình:");
-        inputPanel.add(lblSearchDiemTrungBinh, gbc);
-
-        gbc.gridx = 4;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchDiemTrungBinh = new JTextField(10);
-        inputPanel.add(txtSearchDiemTrungBinh, gbc);
-
-
-
-        row++;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Mã lớp (input field)
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        lblMaLop = new JLabel("Mã lớp:");
-        inputPanel.add(lblMaLop, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        txtMaLop = new JTextField(15);
-        inputPanel.add(txtMaLop, gbc);
-
-        // Tính điểm trung bình Button
-        gbc.gridx = 2;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.NONE;
-        btnTinhDiemTrungBinh = new JButton("Tính điểm trung bình");
-        inputPanel.add(btnTinhDiemTrungBinh, gbc);
-
-        // Search by Xep Loai
-        gbc.gridx = 3;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.fill = GridBagConstraints.NONE;
-        lblSearchXepLoai = new JLabel("Tìm kiếm theo xếp loại:");
-        inputPanel.add(lblSearchXepLoai, gbc);
-
-        gbc.gridx = 4;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        txtSearchXepLoai = new JTextField(10);
-        inputPanel.add(txtSearchXepLoai, gbc);
-
-
-
-        row++;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Ngày sinh
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        lblNgaySinh = new JLabel("Ngày sinh:");
-        inputPanel.add(lblNgaySinh, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        txtNgaySinh = new JTextField(15);
-        inputPanel.add(txtNgaySinh, gbc);
-
-        // Xếp loại Button
-        gbc.gridx = 2;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.NONE;
-        btnXepLoai = new JButton("Xếp loại");
-        inputPanel.add(btnXepLoai, gbc);
-
-        row++;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Nơi sinh
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.EAST;
-        lblNoiSinh = new JLabel("Nơi sinh:");
-        inputPanel.add(lblNoiSinh, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        txtNoiSinh = new JTextField(15);
-        inputPanel.add(txtNoiSinh, gbc);
-
-        // Add the input panel to the frame
-        add(inputPanel, BorderLayout.SOUTH);
+    private void addActionListeners() {
+        btnBackToHome.addActionListener(this);
+        btnThem.addActionListener(this);
+        btnSua.addActionListener(this);
+        btnXoa.addActionListener(this);
+        btnTinhDiemTrungBinh.addActionListener(this);
+        btnXepLoai.addActionListener(this);
+        btnTinhDiemTrungBinhTatCa.addActionListener(this);
+        btnXepLoaiTatCa.addActionListener(this);
+        btnSearchMaSV.addActionListener(this);
+        btnSearchMaLop.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnThem) {
+            themSinhVien();
+        } else if (e.getSource() == btnSua) {
+            suaSinhVien();
+        } else if (e.getSource() == btnXoa) {
+            xoaSinhVien();
+        } else if (e.getSource() == btnTinhDiemTrungBinh) {
+            tinhDiemTrungBinh();
+        } else if (e.getSource() == btnTinhDiemTrungBinhTatCa) {
+            tinhDiemTrungBinhTatCa();
+        } else if (e.getSource() == btnXepLoai) {
+            xepLoai();
+        } else if (e.getSource() == btnXepLoaiTatCa) {
+            xepLoaiTatCa();
+        } else if (e.getSource() == btnSearchMaSV) {
+            timTheoMaSV();
+        } else if (e.getSource() == btnSearchMaLop) {
+            timTheoMaLop();
         }
-        // Add action handling for other buttons here if needed
     }
 
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<SinhVien> danhSachSV = sinhVienDAO.getAllSinhVien();
+        for (SinhVien sv : danhSachSV) {
+            addSinhVienToTable(sv);
+        }
+    }
 
+    private void addSinhVienToTable(SinhVien sv) {
+        Object[] row = {
+            sv.getMaHV(),
+            sv.getHoTen(),
+            sv.getChucVu(),
+            sv.getGioiTinh(),
+            sv.getMaLop(),
+            sv.getNgaySinh(),
+            sv.getNoiSinh(),
+            sv.getDiemTB(),
+            sv.getXepLoai()
+        };
+        tableModel.addRow(row);
+    }
+
+    private void displaySelectedRow(int row) {
+        txtMaSV.setText(tableModel.getValueAt(row, 0).toString());
+        txtHoTenSV.setText(tableModel.getValueAt(row, 1).toString());
+        txtChucVu.setText(tableModel.getValueAt(row, 2).toString());
+        txtGioiTinh.setText(tableModel.getValueAt(row, 3).toString());
+        txtMaLop.setText(tableModel.getValueAt(row, 4).toString());
+        txtNgaySinh.setText(tableModel.getValueAt(row, 5).toString());
+        txtNoiSinh.setText(tableModel.getValueAt(row, 6).toString());
+    }
+
+    private SinhVien layThongTinTuForm() {
+        SinhVien sv = new SinhVien();
+        sv.setMaHV(txtMaSV.getText().trim());
+        sv.setHoTen(txtHoTenSV.getText().trim());
+        sv.setChucVu(txtChucVu.getText().trim());
+        sv.setGioiTinh(txtGioiTinh.getText().trim());
+        sv.setMaLop(txtMaLop.getText().trim());
+        sv.setNgaySinh(txtNgaySinh.getText().trim());
+        sv.setNoiSinh(txtNoiSinh.getText().trim());
+        return sv;
+    }
+
+    private void xoaForm() {
+        txtMaSV.setText("");
+        txtHoTenSV.setText("");
+        txtChucVu.setText("");
+        txtGioiTinh.setText("");
+        txtMaLop.setText("");
+        txtNgaySinh.setText("");
+        txtNoiSinh.setText("");
+    }
+
+    private void themSinhVien() {
+        SinhVien sv = layThongTinTuForm();
+        if (sinhVienDAO.themSinhVien(sv)) {
+            JOptionPane.showMessageDialog(this, "Thêm sinh viên thành công!");
+            loadDataToTable();
+            xoaForm();
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm sinh viên thất bại!");
+        }
+    }
+
+    private void suaSinhVien() {
+        SinhVien sv = layThongTinTuForm();
+        if (sinhVienDAO.suaSinhVien(sv)) {
+            JOptionPane.showMessageDialog(this, "Cập nhật sinh viên thành công!");
+            loadDataToTable();
+            xoaForm();
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật sinh viên thất bại!");
+        }
+    }
+
+    private void xoaSinhVien() {
+        String maSV = txtMaSV.getText().trim();
+        if (maSV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sinh viên cần xóa!");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc muốn xóa sinh viên này?", 
+            "Xác nhận xóa", 
+            JOptionPane.YES_NO_OPTION);
+            
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (sinhVienDAO.xoaSinhVien(maSV)) {
+                JOptionPane.showMessageDialog(this, "Xóa sinh viên thành công!");
+                loadDataToTable();
+                xoaForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Xóa sinh viên thất bại!");
+            }
+        }
+    }
+
+    private void tinhDiemTrungBinh() {
+        String maSV = txtMaSV.getText().trim();
+        if (maSV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sinh viên!");
+            return;
+        }
+
+        if (sinhVienDAO.tinhDiemTrungBinh(maSV)) {
+            JOptionPane.showMessageDialog(this, "Tính điểm trung bình thành công!");
+            loadDataToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Tính điểm trung bình thất bại!");
+        }
+    }
+
+    private void xepLoai() {
+        String maSV = txtMaSV.getText().trim();
+        if (maSV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sinh viên!");
+            return;
+        }
+
+        if (sinhVienDAO.xepLoai(maSV)) {
+            JOptionPane.showMessageDialog(this, "Xếp loại thành công!");
+            loadDataToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Xếp loại thất bại!");
+        }
+    }
+
+    private void tinhDiemTrungBinhTatCa() {
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc muốn tính điểm trung bình cho tất cả sinh viên?", 
+            "Xác nhận", 
+            JOptionPane.YES_NO_OPTION);
+            
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (sinhVienDAO.tinhDiemTrungBinhTatCa()) {
+                JOptionPane.showMessageDialog(this, "Tính điểm trung bình cho tất cả sinh viên thành công!");
+                loadDataToTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi tính điểm trung bình!");
+            }
+        }
+    }
+
+    private void xepLoaiTatCa() {
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc muốn xếp loại cho tất cả sinh viên?", 
+            "Xác nhận", 
+            JOptionPane.YES_NO_OPTION);
+            
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (sinhVienDAO.xepLoaiTatCa()) {
+                JOptionPane.showMessageDialog(this, "Xếp loại cho tất cả sinh viên thành công!");
+                loadDataToTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Có lỗi xảy ra khi xếp loại!");
+            }
+        }
+    }
+
+    private void timTheoMaSV() {
+        String maSV = txtSearchMaSV.getText().trim();
+        if (maSV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã sinh viên cần tìm!");
+            return;
+        }
+
+        SinhVien sv = sinhVienDAO.timTheoMaSV(maSV);
+        if (sv != null) {
+            tableModel.setRowCount(0);
+            addSinhVienToTable(sv);
+        } else {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy sinh viên!");
+            loadDataToTable();
+        }
+    }
+
+    private void timTheoMaLop() {
+        String maLop = txtSearchMaLop.getText().trim();
+        if (maLop.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã lớp cần tìm!");
+            return;
+        }
+
+        List<SinhVien> danhSachSV = sinhVienDAO.timTheoMaLop(maLop);
+        tableModel.setRowCount(0);
+        if (!danhSachSV.isEmpty()) {
+            for (SinhVien sv : danhSachSV) {
+                addSinhVienToTable(sv);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy sinh viên nào trong lớp này!");
+            loadDataToTable();
+        }
+    }
 }

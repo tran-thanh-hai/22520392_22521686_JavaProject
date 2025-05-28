@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.GiaoVienHomeController;
+import DAO.LichGiangDAO;
+import Model.LichGiang;
+import java.util.List;
 
 /**
  *
@@ -45,6 +48,8 @@ public class XemLichGiang extends JFrame implements ActionListener {
     private JButton btnBackToHome;
 
     private GiaoVienHomeController controller;
+
+    private LichGiangDAO lichGiangDAO;
 
     public XemLichGiang() {
         setTitle("Xem Lịch Giảng");
@@ -219,15 +224,218 @@ public class XemLichGiang extends JFrame implements ActionListener {
 
         // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
+
+        // Khởi tạo DAO
+        lichGiangDAO = new LichGiangDAO();
+
+        // Thêm action listeners cho các nút tìm kiếm
+        btnSearchMaLopSearch = new JButton("Tìm");
+        btnSearchMaLopSearch.addActionListener(this);
+        gbc.gridx = 5;
+        gbc.gridy = 0;
+        inputPanel.add(btnSearchMaLopSearch, gbc);
+
+        btnSearchMaMHSearch = new JButton("Tìm");
+        btnSearchMaMHSearch.addActionListener(this);
+        gbc.gridx = 5;
+        gbc.gridy = 1;
+        inputPanel.add(btnSearchMaMHSearch, gbc);
+
+        btnSearchMaGVSearch = new JButton("Tìm");
+        btnSearchMaGVSearch.addActionListener(this);
+        gbc.gridx = 5;
+        gbc.gridy = 2;
+        inputPanel.add(btnSearchMaGVSearch, gbc);
+
+        btnSearchHocKySearch = new JButton("Tìm");
+        btnSearchHocKySearch.addActionListener(this);
+        gbc.gridx = 5;
+        gbc.gridy = 3;
+        inputPanel.add(btnSearchHocKySearch, gbc);
+
+        btnSearchNamSearch = new JButton("Tìm");
+        btnSearchNamSearch.addActionListener(this);
+        gbc.gridx = 5;
+        gbc.gridy = 4;
+        inputPanel.add(btnSearchNamSearch, gbc);
+
+        // Load dữ liệu ban đầu
+        loadDataToTable();
+    }
+
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<LichGiang> list = lichGiangDAO.getAllLichGiang();
+        for (LichGiang lg : list) {
+            tableModel.addRow(new Object[]{
+                lg.getMaLop(),
+                lg.getMaMH(),
+                lg.getMaGV(),
+                lg.getHocKy(),
+                lg.getNam(),
+                lg.getNgBatDau(),
+                lg.getNgKetThuc()
+            });
+        }
+    }
+
+    private void searchByMaLop() {
+        String maLop = txtSearchMaLopSearch.getText().trim();
+        if (!maLop.isEmpty()) {
+            List<LichGiang> list = lichGiangDAO.timTheoMaLop(maLop);
+            tableModel.setRowCount(0);
+            for (LichGiang lg : list) {
+                tableModel.addRow(new Object[]{
+                    lg.getMaLop(),
+                    lg.getMaMH(),
+                    lg.getMaGV(),
+                    lg.getHocKy(),
+                    lg.getNam(),
+                    lg.getNgBatDau(),
+                    lg.getNgKetThuc()
+                });
+            }
+            if (list.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "Không tìm thấy lịch giảng cho lớp " + maLop, 
+                    "Thông báo", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            loadDataToTable();
+        }
+    }
+
+    private void searchByMaMH() {
+        String maMH = txtSearchMaMHSearch.getText().trim();
+        if (!maMH.isEmpty()) {
+            List<LichGiang> list = lichGiangDAO.timTheoMaMH(maMH);
+            tableModel.setRowCount(0);
+            for (LichGiang lg : list) {
+                tableModel.addRow(new Object[]{
+                    lg.getMaLop(),
+                    lg.getMaMH(),
+                    lg.getMaGV(),
+                    lg.getHocKy(),
+                    lg.getNam(),
+                    lg.getNgBatDau(),
+                    lg.getNgKetThuc()
+                });
+            }
+            if (list.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "Không tìm thấy lịch giảng cho môn học " + maMH, 
+                    "Thông báo", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            loadDataToTable();
+        }
+    }
+
+    private void searchByMaGV() {
+        String maGV = txtSearchMaGVSearch.getText().trim();
+        if (!maGV.isEmpty()) {
+            List<LichGiang> list = lichGiangDAO.timTheoMaGV(maGV);
+            tableModel.setRowCount(0);
+            for (LichGiang lg : list) {
+                tableModel.addRow(new Object[]{
+                    lg.getMaLop(),
+                    lg.getMaMH(),
+                    lg.getMaGV(),
+                    lg.getHocKy(),
+                    lg.getNam(),
+                    lg.getNgBatDau(),
+                    lg.getNgKetThuc()
+                });
+            }
+            if (list.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "Không tìm thấy lịch giảng cho giáo viên " + maGV, 
+                    "Thông báo", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            loadDataToTable();
+        }
+    }
+
+    private void searchByHocKy() {
+        String hocKy = txtSearchHocKySearch.getText().trim();
+        if (!hocKy.isEmpty()) {
+            List<LichGiang> list = lichGiangDAO.timTheoHocKy(hocKy);
+            tableModel.setRowCount(0);
+            for (LichGiang lg : list) {
+                tableModel.addRow(new Object[]{
+                    lg.getMaLop(),
+                    lg.getMaMH(),
+                    lg.getMaGV(),
+                    lg.getHocKy(),
+                    lg.getNam(),
+                    lg.getNgBatDau(),
+                    lg.getNgKetThuc()
+                });
+            }
+            if (list.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                    "Không tìm thấy lịch giảng cho học kỳ " + hocKy, 
+                    "Thông báo", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            loadDataToTable();
+        }
+    }
+
+    private void searchByNam() {
+        try {
+            String namStr = txtSearchNamSearch.getText().trim();
+            if (!namStr.isEmpty()) {
+                int nam = Integer.parseInt(namStr);
+                List<LichGiang> list = lichGiangDAO.timTheoNam(nam);
+                tableModel.setRowCount(0);
+                for (LichGiang lg : list) {
+                    tableModel.addRow(new Object[]{
+                        lg.getMaLop(),
+                        lg.getMaMH(),
+                        lg.getMaGV(),
+                        lg.getHocKy(),
+                        lg.getNam(),
+                        lg.getNgBatDau(),
+                        lg.getNgKetThuc()
+                    });
+                }
+                if (list.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Không tìm thấy lịch giảng cho năm " + nam, 
+                        "Thông báo", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                loadDataToTable();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, 
+                "Vui lòng nhập năm hợp lệ!", 
+                "Lỗi", 
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnSearchMaLopSearch) {
+            searchByMaLop();
+        } else if (e.getSource() == btnSearchMaMHSearch) {
+            searchByMaMH();
+        } else if (e.getSource() == btnSearchMaGVSearch) {
+            searchByMaGV();
+        } else if (e.getSource() == btnSearchHocKySearch) {
+            searchByHocKy();
+        } else if (e.getSource() == btnSearchNamSearch) {
+            searchByNam();
         }
-        // Add action handling for other buttons here if needed
     }
-
-
 }

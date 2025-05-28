@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.GiaoVienHomeController;
+import DAO.SinhVienDAO;
+import Model.SinhVien;
+import java.util.List;
 
 /**
  *
@@ -60,6 +63,8 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
 
     private GiaoVienHomeController controller;
 
+    private SinhVienDAO sinhVienDAO;
+
     public QuanLySinhVien() {
         setTitle("Quản Lý Sinh Viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,9 +113,7 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-
         int row = 0;
-
 
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -124,14 +127,12 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtMaSV = new JTextField(15);
         inputPanel.add(txtMaSV, gbc);
 
-
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.NONE;
         btnThem = new JButton("Thêm");
         inputPanel.add(btnThem, gbc);
-
 
         gbc.gridx = 3;
         gbc.gridy = row;
@@ -147,16 +148,36 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtSearchMaSVSearch = new JTextField(10);
         inputPanel.add(txtSearchMaSVSearch, gbc);
         
+        // Khởi tạo các nút tìm kiếm trước khi thêm vào panel
+        btnSearchMaSVSearch = new JButton("Tìm");
+        btnSearchMaLopSearch = new JButton("Tìm");
+        btnSearchDiemTrungBinh = new JButton("Tìm");
+        btnSearchXepLoai = new JButton("Tìm");
+
+        // Thêm nút tìm kiếm mã sinh viên
         gbc.gridx = 5;
-        gbc.gridy = row;
+        gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.NONE;
-        btnSearchMaSVSearch = new JButton("Tìm");
         inputPanel.add(btnSearchMaSVSearch, gbc);
+
+        // Thêm nút tìm kiếm mã lớp
+        gbc.gridx = 5;
+        gbc.gridy = 1;
+        inputPanel.add(btnSearchMaLopSearch, gbc);
+
+        // Thêm nút tìm kiếm điểm trung bình
+        gbc.gridx = 5;
+        gbc.gridy = 2;
+        inputPanel.add(btnSearchDiemTrungBinh, gbc);
+
+        // Thêm nút tìm kiếm xếp loại
+        gbc.gridx = 5;
+        gbc.gridy = 3;
+        inputPanel.add(btnSearchXepLoai, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
 
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -170,14 +191,12 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtHoTenSV = new JTextField(15);
         inputPanel.add(txtHoTenSV, gbc);
 
-
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.NONE;
         btnSua = new JButton("Sửa");
         inputPanel.add(btnSua, gbc);
-
 
         gbc.gridx = 3;
         gbc.gridy = row;
@@ -193,11 +212,8 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtSearchMaLopSearch = new JTextField(10);
         inputPanel.add(txtSearchMaLopSearch, gbc);
 
-
-
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
 
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -211,14 +227,12 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtGioiTinh = new JTextField(15);
         inputPanel.add(txtGioiTinh, gbc);
 
-
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.NONE;
         btnXoa = new JButton("Xóa");
         inputPanel.add(btnXoa, gbc);
-
 
         gbc.gridx = 3;
         gbc.gridy = row;
@@ -234,11 +248,8 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtSearchDiemTrungBinh = new JTextField(10);
         inputPanel.add(txtSearchDiemTrungBinh, gbc);
 
-
-
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
 
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -252,14 +263,12 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtMaLop = new JTextField(15);
         inputPanel.add(txtMaLop, gbc);
 
-
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.NONE;
         btnTinhDiemTrungBinh = new JButton("Tính điểm trung bình");
         inputPanel.add(btnTinhDiemTrungBinh, gbc);
-
 
         gbc.gridx = 3;
         gbc.gridy = row;
@@ -275,11 +284,8 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtSearchXepLoai = new JTextField(10);
         inputPanel.add(txtSearchXepLoai, gbc);
 
-
-
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
 
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -293,7 +299,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtNgaySinh = new JTextField(15);
         inputPanel.add(txtNgaySinh, gbc);
 
-
         gbc.gridx = 2;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -303,7 +308,6 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
 
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -317,17 +321,230 @@ public class QuanLySinhVien extends JFrame implements ActionListener {
         txtNoiSinh = new JTextField(15);
         inputPanel.add(txtNoiSinh, gbc);
 
-
         add(inputPanel, BorderLayout.SOUTH);
+
+        // Khởi tạo DAO
+        sinhVienDAO = new SinhVienDAO();
+        
+        // Thêm action listeners cho tất cả các nút
+        btnThem.addActionListener(this);
+        btnSua.addActionListener(this);
+        btnXoa.addActionListener(this);
+        btnTinhDiemTrungBinh.addActionListener(this);
+        btnXepLoai.addActionListener(this);
+        btnSearchMaSVSearch.addActionListener(this);
+        btnSearchMaLopSearch.addActionListener(this);
+        btnSearchDiemTrungBinh.addActionListener(this);
+        btnSearchXepLoai.addActionListener(this);
+        
+        // Load dữ liệu ban đầu
+        loadDataToTable();
+
+        // Thêm listener cho bảng
+        dataTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = dataTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    txtMaSV.setText(dataTable.getValueAt(selectedRow, 0).toString());
+                    txtHoTenSV.setText(dataTable.getValueAt(selectedRow, 1).toString());
+                    txtGioiTinh.setText(dataTable.getValueAt(selectedRow, 2).toString());
+                    txtMaLop.setText(dataTable.getValueAt(selectedRow, 3).toString());
+                    txtNgaySinh.setText(dataTable.getValueAt(selectedRow, 4).toString());
+                    txtNoiSinh.setText(dataTable.getValueAt(selectedRow, 5).toString());
+                }
+            }
+        });
+    }
+
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<SinhVien> list = sinhVienDAO.getAllSinhVien();
+        for (SinhVien sv : list) {
+            tableModel.addRow(new Object[]{
+                sv.getMaHV(),
+                sv.getHoTen(),
+                sv.getGioiTinh(),
+                sv.getMaLop(),
+                sv.getNgaySinh(),
+                sv.getNoiSinh(),
+                sv.getDiemTB(),
+                sv.getXepLoai()
+            });
+        }
+    }
+
+    private void clearFields() {
+        txtMaSV.setText("");
+        txtHoTenSV.setText("");
+        txtGioiTinh.setText("");
+        txtMaLop.setText("");
+        txtNgaySinh.setText("");
+        txtNoiSinh.setText("");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnThem) {
+            SinhVien sv = new SinhVien();
+            sv.setMaHV(txtMaSV.getText());
+            sv.setHoTen(txtHoTenSV.getText());
+            sv.setGioiTinh(txtGioiTinh.getText());
+            sv.setMaLop(txtMaLop.getText());
+            sv.setNgaySinh(txtNgaySinh.getText());
+            sv.setNoiSinh(txtNoiSinh.getText());
+            
+            if (sinhVienDAO.themSinhVien(sv)) {
+                JOptionPane.showMessageDialog(this, "Thêm sinh viên thành công!");
+                loadDataToTable();
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm sinh viên thất bại!");
+            }
+        } else if (e.getSource() == btnSua) {
+            SinhVien sv = new SinhVien();
+            sv.setMaHV(txtMaSV.getText());
+            sv.setHoTen(txtHoTenSV.getText());
+            sv.setGioiTinh(txtGioiTinh.getText());
+            sv.setMaLop(txtMaLop.getText());
+            sv.setNgaySinh(txtNgaySinh.getText());
+            sv.setNoiSinh(txtNoiSinh.getText());
+            
+            if (sinhVienDAO.suaSinhVien(sv)) {
+                JOptionPane.showMessageDialog(this, "Cập nhật sinh viên thành công!");
+                loadDataToTable();
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật sinh viên thất bại!");
+            }
+        } else if (e.getSource() == btnXoa) {
+            String maSV = txtMaSV.getText();
+            if (sinhVienDAO.xoaSinhVien(maSV)) {
+                JOptionPane.showMessageDialog(this, "Xóa sinh viên thành công!");
+                loadDataToTable();
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Xóa sinh viên thất bại!");
+            }
+        } else if (e.getSource() == btnTinhDiemTrungBinh) {
+            String maSV = txtMaSV.getText();
+            if (!maSV.isEmpty()) {
+                if (sinhVienDAO.tinhDiemTrungBinh(maSV)) {
+                    JOptionPane.showMessageDialog(this, "Tính điểm trung bình thành công!");
+                    loadDataToTable();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Tính điểm trung bình thất bại!");
+                }
+            } else {
+                if (sinhVienDAO.tinhDiemTrungBinhTatCa()) {
+                    JOptionPane.showMessageDialog(this, "Tính điểm trung bình cho tất cả sinh viên thành công!");
+                    loadDataToTable();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Tính điểm trung bình cho tất cả sinh viên thất bại!");
+                }
+            }
+        } else if (e.getSource() == btnXepLoai) {
+            String maSV = txtMaSV.getText();
+            if (!maSV.isEmpty()) {
+                if (sinhVienDAO.xepLoai(maSV)) {
+                    JOptionPane.showMessageDialog(this, "Xếp loại sinh viên thành công!");
+                    loadDataToTable();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Xếp loại sinh viên thất bại!");
+                }
+            } else {
+                if (sinhVienDAO.xepLoaiTatCa()) {
+                    JOptionPane.showMessageDialog(this, "Xếp loại tất cả sinh viên thành công!");
+                    loadDataToTable();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Xếp loại tất cả sinh viên thất bại!");
+                }
+            }
+        } else if (e.getSource() == btnSearchMaSVSearch) {
+            String maSV = txtSearchMaSVSearch.getText();
+            if (!maSV.isEmpty()) {
+                SinhVien sv = sinhVienDAO.timTheoMaSV(maSV);
+                tableModel.setRowCount(0);
+                if (sv != null) {
+                    tableModel.addRow(new Object[]{
+                        sv.getMaHV(),
+                        sv.getHoTen(),
+                        sv.getGioiTinh(),
+                        sv.getMaLop(),
+                        sv.getNgaySinh(),
+                        sv.getNoiSinh(),
+                        sv.getDiemTB(),
+                        sv.getXepLoai()
+                    });
+                }
+            } else {
+                loadDataToTable();
+            }
+        } else if (e.getSource() == btnSearchMaLopSearch) {
+            String maLop = txtSearchMaLopSearch.getText();
+            if (!maLop.isEmpty()) {
+                List<SinhVien> list = sinhVienDAO.timTheoMaLop(maLop);
+                tableModel.setRowCount(0);
+                for (SinhVien sv : list) {
+                    tableModel.addRow(new Object[]{
+                        sv.getMaHV(),
+                        sv.getHoTen(),
+                        sv.getGioiTinh(),
+                        sv.getMaLop(),
+                        sv.getNgaySinh(),
+                        sv.getNoiSinh(),
+                        sv.getDiemTB(),
+                        sv.getXepLoai()
+                    });
+                }
+            } else {
+                loadDataToTable();
+            }
+        } else if (e.getSource() == btnSearchDiemTrungBinh) {
+            try {
+                float diemTB = Float.parseFloat(txtSearchDiemTrungBinh.getText().trim());
+                tableModel.setRowCount(0);
+                List<SinhVien> list = sinhVienDAO.getAllSinhVien();
+                for (SinhVien sv : list) {
+                    if (sv.getDiemTB() == diemTB) {
+                        tableModel.addRow(new Object[]{
+                            sv.getMaHV(),
+                            sv.getHoTen(),
+                            sv.getGioiTinh(),
+                            sv.getMaLop(),
+                            sv.getNgaySinh(),
+                            sv.getNoiSinh(),
+                            sv.getDiemTB(),
+                            sv.getXepLoai()
+                        });
+                    }
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập điểm trung bình hợp lệ!");
+            }
+        } else if (e.getSource() == btnSearchXepLoai) {
+            String xepLoai = txtSearchXepLoai.getText().trim();
+            if (!xepLoai.isEmpty()) {
+                tableModel.setRowCount(0);
+                List<SinhVien> list = sinhVienDAO.getAllSinhVien();
+                for (SinhVien sv : list) {
+                    if (sv.getXepLoai() != null && sv.getXepLoai().equalsIgnoreCase(xepLoai)) {
+                        tableModel.addRow(new Object[]{
+                            sv.getMaHV(),
+                            sv.getHoTen(),
+                            sv.getGioiTinh(),
+                            sv.getMaLop(),
+                            sv.getNgaySinh(),
+                            sv.getNoiSinh(),
+                            sv.getDiemTB(),
+                            sv.getXepLoai()
+                        });
+                    }
+                }
+            } else {
+                loadDataToTable();
+            }
         }
-
     }
-
-
 }

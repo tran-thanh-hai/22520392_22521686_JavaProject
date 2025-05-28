@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.GiaoVienHomeController;
+import DAO.KhoaDAO;
+import Model.Khoa;
+import java.util.List;
 
 /**
  *
@@ -22,8 +25,6 @@ public class XemKhoa extends JFrame implements ActionListener {
     private JTable dataTable;
     private DefaultTableModel tableModel;
 
-
-
     private JLabel lblSearchMaKhoaSearch;
     private JTextField txtSearchMaKhoaSearch;
     private JButton btnSearchMaKhoaSearch;
@@ -31,6 +32,7 @@ public class XemKhoa extends JFrame implements ActionListener {
     private JButton btnBackToHome;
 
     private GiaoVienHomeController controller;
+    private KhoaDAO khoaDAO;
 
     public XemKhoa() {
         setTitle("Xem Khoa");
@@ -40,6 +42,7 @@ public class XemKhoa extends JFrame implements ActionListener {
         setLayout(new BorderLayout());
 
         controller = new GiaoVienHomeController(this);
+        khoaDAO = new KhoaDAO();
 
         // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -69,47 +72,68 @@ public class XemKhoa extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel nhập liệu và nút hành động
-        JPanel inputPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        int row = 0;
-
-
-
-
-
-        gbc.gridx = 3;
-        gbc.anchor = GridBagConstraints.EAST;
+        // Panel tìm kiếm
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        
         lblSearchMaKhoaSearch = new JLabel("Tìm kiếm theo mã khoa:");
-        inputPanel.add(lblSearchMaKhoaSearch, gbc);
-
-        gbc.gridx = 4;
-        gbc.anchor = GridBagConstraints.WEST;
-        txtSearchMaKhoaSearch = new JTextField(10);
-        inputPanel.add(txtSearchMaKhoaSearch, gbc);
-
-        gbc.gridx = 5;
+        searchPanel.add(lblSearchMaKhoaSearch);
+        
+        txtSearchMaKhoaSearch = new JTextField(15);
+        searchPanel.add(txtSearchMaKhoaSearch);
+        
         btnSearchMaKhoaSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchMaKhoaSearch, gbc);
+        btnSearchMaKhoaSearch.addActionListener(this);
+        searchPanel.add(btnSearchMaKhoaSearch);
 
+        add(searchPanel, BorderLayout.SOUTH);
 
+        // Load dữ liệu ban đầu
+        loadDataToTable();
+    }
 
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<Khoa> danhSachKhoa = khoaDAO.getAllKhoa();
+        for (Khoa khoa : danhSachKhoa) {
+            tableModel.addRow(new Object[]{
+                khoa.getMaKhoa(),
+                khoa.getTenKhoa(),
+                khoa.getNgThanhLap(),
+                khoa.getTrgKhoa()
+            });
+        }
+    }
 
-
-        add(inputPanel, BorderLayout.SOUTH);
+    private void searchKhoa() {
+        String maKhoa = txtSearchMaKhoaSearch.getText().trim();
+        if (!maKhoa.isEmpty()) {
+            Khoa khoa = khoaDAO.timKhoaTheoMa(maKhoa);
+            tableModel.setRowCount(0);
+            if (khoa != null) {
+                tableModel.addRow(new Object[]{
+                    khoa.getMaKhoa(),
+                    khoa.getTenKhoa(),
+                    khoa.getNgThanhLap(),
+                    khoa.getTrgKhoa()
+                });
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                    "Không tìm thấy khoa với mã " + maKhoa, 
+                    "Thông báo", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            loadDataToTable();
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnSearchMaKhoaSearch) {
+            searchKhoa();
         }
-        // Add action handling for other buttons here if needed
     }
-
-
 }
 

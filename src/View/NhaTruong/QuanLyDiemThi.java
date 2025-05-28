@@ -11,6 +11,9 @@ import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Controller.NhaTruongHomeController;
+import DAO.DiemThiDAO;
+import Model.DiemThi;
+import java.util.List;
 
 /**
  *
@@ -55,6 +58,7 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
     private JButton btnBackToHome;
 
     private NhaTruongHomeController controller;
+    private DiemThiDAO diemThiDAO;
 
     public QuanLyDiemThi() {
         setTitle("Quản Lý Điểm Thi");
@@ -188,7 +192,13 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         txtSearchLanThi = new JTextField(10);
         inputPanel.add(txtSearchLanThi, gbc);
 
-        
+        gbc.gridx = 5;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+        btnSearchLanThi = new JButton("Tìm");
+        inputPanel.add(btnSearchLanThi, gbc);
+
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
@@ -228,7 +238,12 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
         txtSearchDiem = new JTextField(10);
         inputPanel.add(txtSearchDiem, gbc);
 
-  
+        gbc.gridx = 5;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+        btnSearchDiem = new JButton("Tìm");
+        inputPanel.add(btnSearchDiem, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -280,15 +295,137 @@ public class QuanLyDiemThi extends JFrame implements ActionListener {
 
         // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
+
+        // Initialize DAO and load data
+        diemThiDAO = new DiemThiDAO();
+        loadDataToTable();
+
+        // Add action listeners
+        btnThem.addActionListener(this);
+        btnSua.addActionListener(this);
+        btnXoa.addActionListener(this);
+        btnSearchMaMH.addActionListener(this);
+        btnSearchLanThi.addActionListener(this);
+        btnSearchDiem.addActionListener(this);
+
+        // Add listener for table selection
+        dataTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = dataTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    txtMaHV.setText(dataTable.getValueAt(selectedRow, 0).toString());
+                    txtMaMH.setText(dataTable.getValueAt(selectedRow, 1).toString());
+                    txtLanThi.setText(dataTable.getValueAt(selectedRow, 2).toString());
+                    txtNgayThi.setText(dataTable.getValueAt(selectedRow, 3).toString());
+                    txtDiem.setText(dataTable.getValueAt(selectedRow, 4).toString());
+                    txtKetQua.setText(dataTable.getValueAt(selectedRow, 5).toString());
+                }
+            }
+        });
+    }
+
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<DiemThi> list = diemThiDAO.getAllDiemThi();
+        for (DiemThi dt : list) {
+            tableModel.addRow(new Object[]{
+                dt.getMaHV(),
+                dt.getMaMH(),
+                dt.getLanThi(),
+                dt.getNgThi(),
+                dt.getDiem(),
+                dt.getKetQua()
+            });
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnThem) {
+            DiemThi dt = new DiemThi();
+            dt.setMaHV(txtMaHV.getText());
+            dt.setMaMH(txtMaMH.getText());
+            dt.setLanThi(Integer.parseInt(txtLanThi.getText()));
+            dt.setNgThi(txtNgayThi.getText());
+            dt.setDiem(Float.parseFloat(txtDiem.getText()));
+            dt.setKetQua(txtKetQua.getText());
+            
+            if (diemThiDAO.themDiemThi(dt)) {
+                JOptionPane.showMessageDialog(this, "Thêm điểm thi thành công!");
+                loadDataToTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm điểm thi thất bại!");
+            }
+        } else if (e.getSource() == btnSua) {
+            DiemThi dt = new DiemThi();
+            dt.setMaHV(txtMaHV.getText());
+            dt.setMaMH(txtMaMH.getText());
+            dt.setLanThi(Integer.parseInt(txtLanThi.getText()));
+            dt.setNgThi(txtNgayThi.getText());
+            dt.setDiem(Float.parseFloat(txtDiem.getText()));
+            dt.setKetQua(txtKetQua.getText());
+            
+            if (diemThiDAO.suaDiemThi(dt)) {
+                JOptionPane.showMessageDialog(this, "Cập nhật điểm thi thành công!");
+                loadDataToTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật điểm thi thất bại!");
+            }
+        } else if (e.getSource() == btnXoa) {
+            String maHV = txtMaHV.getText();
+            String maMH = txtMaMH.getText();
+            int lanThi = Integer.parseInt(txtLanThi.getText());
+            
+            if (diemThiDAO.xoaDiemThi(maHV, maMH, lanThi)) {
+                JOptionPane.showMessageDialog(this, "Xóa điểm thi thành công!");
+                loadDataToTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Xóa điểm thi thất bại!");
+            }
+        } else if (e.getSource() == btnSearchMaMH) {
+            String maMH = txtSearchMaMH.getText();
+            tableModel.setRowCount(0);
+            List<DiemThi> list = diemThiDAO.timKiemTheoMaMH(maMH);
+            for (DiemThi dt : list) {
+                tableModel.addRow(new Object[]{
+                    dt.getMaHV(),
+                    dt.getMaMH(),
+                    dt.getLanThi(),
+                    dt.getNgThi(),
+                    dt.getDiem(),
+                    dt.getKetQua()
+                });
+            }
+        } else if (e.getSource() == btnSearchLanThi) {
+            int lanThi = Integer.parseInt(txtSearchLanThi.getText());
+            tableModel.setRowCount(0);
+            List<DiemThi> list = diemThiDAO.timKiemTheoLanThi(lanThi);
+            for (DiemThi dt : list) {
+                tableModel.addRow(new Object[]{
+                    dt.getMaHV(),
+                    dt.getMaMH(),
+                    dt.getLanThi(),
+                    dt.getNgThi(),
+                    dt.getDiem(),
+                    dt.getKetQua()
+                });
+            }
+        } else if (e.getSource() == btnSearchDiem) {
+            float diem = Float.parseFloat(txtSearchDiem.getText());
+            tableModel.setRowCount(0);
+            List<DiemThi> list = diemThiDAO.timKiemTheoDiem(diem);
+            for (DiemThi dt : list) {
+                tableModel.addRow(new Object[]{
+                    dt.getMaHV(),
+                    dt.getMaMH(),
+                    dt.getLanThi(),
+                    dt.getNgThi(),
+                    dt.getDiem(),
+                    dt.getKetQua()
+                });
+            }
         }
-        // Add action handling for other buttons here if needed
     }
-
-
 }

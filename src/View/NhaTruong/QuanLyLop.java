@@ -11,6 +11,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import DAO.LopDAO;
+import Model.Lop;
+import java.util.List;
 
 /**
  *
@@ -50,6 +53,7 @@ public class QuanLyLop extends JFrame implements ActionListener {
     private JButton btnBackToHome;
 
     private NhaTruongHomeController controller;
+    private LopDAO lopDAO;
 
     public QuanLyLop() {
         setTitle("Quản lý Lớp");
@@ -247,15 +251,123 @@ public class QuanLyLop extends JFrame implements ActionListener {
 
         // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
+
+        lopDAO = new LopDAO();
+        loadDataToTable();
+
+        // Add action listeners
+        btnThem.addActionListener(this);
+        btnSua.addActionListener(this);
+        btnXoa.addActionListener(this);
+        btnSearchMaLopSearch.addActionListener(this);
+        btnSearchMaGVSearch.addActionListener(this);
+
+        // Add listener for table
+        dataTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = dataTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    txtMaLop.setText(dataTable.getValueAt(selectedRow, 0).toString());
+                    txtTenLop.setText(dataTable.getValueAt(selectedRow, 1).toString());
+                    txtTruongLop.setText(dataTable.getValueAt(selectedRow, 2).toString());
+                    txtSiSo.setText(dataTable.getValueAt(selectedRow, 3).toString());
+                    txtMaGVCN.setText(dataTable.getValueAt(selectedRow, 4).toString());
+                }
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnThem) {
+            Lop lop = new Lop();
+            lop.setMaLop(txtMaLop.getText());
+            lop.setTenLop(txtTenLop.getText());
+            lop.setTrgLop(txtTruongLop.getText());
+            lop.setSiSo(Integer.parseInt(txtSiSo.getText()));
+            lop.setMaGVCN(txtMaGVCN.getText());
+            
+            if (lopDAO.themLop(lop)) {
+                JOptionPane.showMessageDialog(this, "Thêm lớp thành công!");
+                loadDataToTable();
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm lớp thất bại!");
+            }
+        } else if (e.getSource() == btnSua) {
+            Lop lop = new Lop();
+            lop.setMaLop(txtMaLop.getText());
+            lop.setTenLop(txtTenLop.getText());
+            lop.setTrgLop(txtTruongLop.getText());
+            lop.setSiSo(Integer.parseInt(txtSiSo.getText()));
+            lop.setMaGVCN(txtMaGVCN.getText());
+            
+            if (lopDAO.suaLop(lop)) {
+                JOptionPane.showMessageDialog(this, "Cập nhật lớp thành công!");
+                loadDataToTable();
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật lớp thất bại!");
+            }
+        } else if (e.getSource() == btnXoa) {
+            String maLop = txtMaLop.getText();
+            if (lopDAO.xoaLop(maLop)) {
+                JOptionPane.showMessageDialog(this, "Xóa lớp thành công!");
+                loadDataToTable();
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Xóa lớp thất bại!");
+            }
+        } else if (e.getSource() == btnSearchMaLopSearch) {
+            String maLop = txtSearchMaLopSearch.getText();
+            tableModel.setRowCount(0);
+            List<Lop> list = lopDAO.timKiemTheoMaLop(maLop);
+            for (Lop lop : list) {
+                tableModel.addRow(new Object[]{
+                    lop.getMaLop(),
+                    lop.getTenLop(),
+                    lop.getTrgLop(),
+                    lop.getSiSo(),
+                    lop.getMaGVCN()
+                });
+            }
+        } else if (e.getSource() == btnSearchMaGVSearch) {
+            String maGVCN = txtSearchMaGVSearch.getText();
+            tableModel.setRowCount(0);
+            List<Lop> list = lopDAO.timKiemTheoMaGVCN(maGVCN);
+            for (Lop lop : list) {
+                tableModel.addRow(new Object[]{
+                    lop.getMaLop(),
+                    lop.getTenLop(),
+                    lop.getTrgLop(),
+                    lop.getSiSo(),
+                    lop.getMaGVCN()
+                });
+            }
         }
-        // Add action handling for other buttons here if needed
     }
 
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<Lop> list = lopDAO.getAllLop();
+        for (Lop lop : list) {
+            tableModel.addRow(new Object[]{
+                lop.getMaLop(),
+                lop.getTenLop(),
+                lop.getTrgLop(),
+                lop.getSiSo(),
+                lop.getMaGVCN()
+            });
+        }
+    }
 
+    private void clearFields() {
+        txtMaLop.setText("");
+        txtTenLop.setText("");
+        txtTruongLop.setText("");
+        txtSiSo.setText("");
+        txtMaGVCN.setText("");
+    }
 }
