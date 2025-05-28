@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.SinhVienHomeController;
+import Model.MonHoc;
+import DAO.MonHocDAO;
+import java.util.List;
 
 /**
  *
@@ -42,6 +45,8 @@ public class XemMonHoc extends JFrame implements ActionListener {
     private JButton btnBackToHome;
 
     private SinhVienHomeController controller;
+
+    private MonHocDAO monHocDAO;
 
     public XemMonHoc() {
         setTitle("Xem Môn học");
@@ -189,15 +194,163 @@ public class XemMonHoc extends JFrame implements ActionListener {
 
         // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
+
+        monHocDAO = new MonHocDAO();
+        
+        // Thêm action listeners cho các nút tìm kiếm
+        btnSearchMaMHSearch = new JButton("Tìm");
+        btnSearchTCLTSearch = new JButton("Tìm");
+        btnSearchTCTHSearch = new JButton("Tìm");
+        btnSearchMaKhoaSearch = new JButton("Tìm");
+        
+        btnSearchMaMHSearch.addActionListener(this);
+        btnSearchTCLTSearch.addActionListener(this);
+        btnSearchTCTHSearch.addActionListener(this);
+        btnSearchMaKhoaSearch.addActionListener(this);
+        
+        // Thêm các nút tìm kiếm vào panel
+        gbc.gridx = 5;
+        gbc.gridy = 0;
+        inputPanel.add(btnSearchMaMHSearch, gbc);
+        
+        gbc.gridy = 1;
+        inputPanel.add(btnSearchTCLTSearch, gbc);
+        
+        gbc.gridy = 2;
+        inputPanel.add(btnSearchTCTHSearch, gbc);
+        
+        gbc.gridy = 3;
+        inputPanel.add(btnSearchMaKhoaSearch, gbc);
+        
+        // Load dữ liệu ban đầu
+        loadDataToTable();
+    }
+
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<MonHoc> dsMonHoc = monHocDAO.getAllMonHoc();
+        for (MonHoc mh : dsMonHoc) {
+            Object[] row = {
+                mh.getMaMH(),
+                mh.getTenMH(),
+                mh.getTCLT(),
+                mh.getTCTH(),
+                mh.getMaKhoa()
+            };
+            tableModel.addRow(row);
+        }
+    }
+
+    private void timKiemTheoMaMH() {
+        String maMH = txtSearchMaMHSearch.getText().trim();
+        if (!maMH.isEmpty()) {
+            MonHoc mh = monHocDAO.timTheoMaMH(maMH);
+            tableModel.setRowCount(0);
+            if (mh != null) {
+                Object[] row = {
+                    mh.getMaMH(),
+                    mh.getTenMH(),
+                    mh.getTCLT(),
+                    mh.getTCTH(),
+                    mh.getMaKhoa()
+                };
+                tableModel.addRow(row);
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy môn học với mã " + maMH);
+                loadDataToTable();
+            }
+        } else {
+            loadDataToTable();
+        }
+    }
+
+    private void timKiemTheoTCLT() {
+        try {
+            int tclt = Integer.parseInt(txtSearchTCLTSearch.getText().trim());
+            List<MonHoc> dsMonHoc = monHocDAO.timTheoTCLT(tclt);
+            tableModel.setRowCount(0);
+            if (!dsMonHoc.isEmpty()) {
+                for (MonHoc mh : dsMonHoc) {
+                    Object[] row = {
+                        mh.getMaMH(),
+                        mh.getTenMH(),
+                        mh.getTCLT(),
+                        mh.getTCTH(),
+                        mh.getMaKhoa()
+                    };
+                    tableModel.addRow(row);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy môn học có số tín chỉ lý thuyết " + tclt);
+                loadDataToTable();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số tín chỉ lý thuyết hợp lệ!");
+        }
+    }
+
+    private void timKiemTheoTCTH() {
+        try {
+            int tcth = Integer.parseInt(txtSearchTCTHSearch.getText().trim());
+            List<MonHoc> dsMonHoc = monHocDAO.timTheoTCTH(tcth);
+            tableModel.setRowCount(0);
+            if (!dsMonHoc.isEmpty()) {
+                for (MonHoc mh : dsMonHoc) {
+                    Object[] row = {
+                        mh.getMaMH(),
+                        mh.getTenMH(),
+                        mh.getTCLT(),
+                        mh.getTCTH(),
+                        mh.getMaKhoa()
+                    };
+                    tableModel.addRow(row);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy môn học có số tín chỉ thực hành " + tcth);
+                loadDataToTable();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số tín chỉ thực hành hợp lệ!");
+        }
+    }
+
+    private void timKiemTheoMaKhoa() {
+        String maKhoa = txtSearchMaKhoaSearch.getText().trim();
+        if (!maKhoa.isEmpty()) {
+            List<MonHoc> dsMonHoc = monHocDAO.timTheoMaKhoa(maKhoa);
+            tableModel.setRowCount(0);
+            if (!dsMonHoc.isEmpty()) {
+                for (MonHoc mh : dsMonHoc) {
+                    Object[] row = {
+                        mh.getMaMH(),
+                        mh.getTenMH(),
+                        mh.getTCLT(),
+                        mh.getTCTH(),
+                        mh.getMaKhoa()
+                    };
+                    tableModel.addRow(row);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy môn học thuộc khoa " + maKhoa);
+                loadDataToTable();
+            }
+        } else {
+            loadDataToTable();
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnSearchMaMHSearch) {
+            timKiemTheoMaMH();
+        } else if (e.getSource() == btnSearchTCLTSearch) {
+            timKiemTheoTCLT();
+        } else if (e.getSource() == btnSearchTCTHSearch) {
+            timKiemTheoTCTH();
+        } else if (e.getSource() == btnSearchMaKhoaSearch) {
+            timKiemTheoMaKhoa();
         }
-        // Add action handling for other buttons here if needed
     }
-
-
 }

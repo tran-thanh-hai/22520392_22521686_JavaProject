@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.SinhVienHomeController;
+import Model.Lop;
+import DAO.LopDAO;
+import java.util.List;
 
 /**
  *
@@ -35,6 +38,8 @@ public class XemLop extends JFrame implements ActionListener {
     private JButton btnBackToHome;
 
     private SinhVienHomeController controller;
+
+    private LopDAO lopDAO;
 
     public XemLop() {
         setTitle("Xem Lớp");
@@ -78,16 +83,12 @@ public class XemLop extends JFrame implements ActionListener {
         // Input and Action Panel
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Add some padding
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
         int row = 0;
 
-
-
-        // Search by MaLop
+        // Khởi tạo và thêm components tìm kiếm theo mã lớp
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -102,6 +103,7 @@ public class XemLop extends JFrame implements ActionListener {
         txtSearchMaLopSearch = new JTextField(10);
         inputPanel.add(txtSearchMaLopSearch, gbc);
 
+        // Khởi tạo nút tìm kiếm mã lớp
         gbc.gridx = 5;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
@@ -112,9 +114,7 @@ public class XemLop extends JFrame implements ActionListener {
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-
-
-        // Search by MaGVCN
+        // Khởi tạo và thêm components tìm kiếm theo mã GVCN
         gbc.gridx = 3;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
@@ -129,28 +129,104 @@ public class XemLop extends JFrame implements ActionListener {
         txtSearchMaGVSearch = new JTextField(10);
         inputPanel.add(txtSearchMaGVSearch, gbc);
 
-
+        // Khởi tạo nút tìm kiếm mã GVCN
+        gbc.gridx = 5;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+        btnSearchMaGVSearch = new JButton("Tìm");
+        inputPanel.add(btnSearchMaGVSearch, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-
-        row++;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-
 
         // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
+
+        // Khởi tạo DAO
+        lopDAO = new LopDAO();
+        
+        // Thêm action listeners cho các nút tìm kiếm
+        btnSearchMaLopSearch.addActionListener(this);
+        btnSearchMaGVSearch.addActionListener(this);
+        
+        // Load dữ liệu ban đầu
+        loadDataToTable();
+    }
+
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<Lop> dsLop = lopDAO.getAllLop();
+        for (Lop lop : dsLop) {
+            Object[] row = {
+                lop.getMaLop(),
+                lop.getTenLop(),
+                lop.getTrgLop(),
+                lop.getSiSo(),
+                lop.getMaGVCN()
+            };
+            tableModel.addRow(row);
+        }
+    }
+
+    private void timKiemTheoMaLop() {
+        String maLop = txtSearchMaLopSearch.getText().trim();
+        if (!maLop.isEmpty()) {
+            List<Lop> dsLop = lopDAO.timKiemTheoMaLop(maLop);
+            tableModel.setRowCount(0);
+            if (!dsLop.isEmpty()) {
+                for (Lop lop : dsLop) {
+                    Object[] row = {
+                        lop.getMaLop(),
+                        lop.getTenLop(),
+                        lop.getTrgLop(),
+                        lop.getSiSo(),
+                        lop.getMaGVCN()
+                    };
+                    tableModel.addRow(row);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy lớp với mã " + maLop);
+                loadDataToTable();
+            }
+        } else {
+            loadDataToTable();
+        }
+    }
+
+    private void timKiemTheoMaGVCN() {
+        String maGVCN = txtSearchMaGVSearch.getText().trim();
+        if (!maGVCN.isEmpty()) {
+            List<Lop> dsLop = lopDAO.timKiemTheoMaGVCN(maGVCN);
+            tableModel.setRowCount(0);
+            if (!dsLop.isEmpty()) {
+                for (Lop lop : dsLop) {
+                    Object[] row = {
+                        lop.getMaLop(),
+                        lop.getTenLop(),
+                        lop.getTrgLop(),
+                        lop.getSiSo(),
+                        lop.getMaGVCN()
+                    };
+                    tableModel.addRow(row);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy lớp với mã GVCN " + maGVCN);
+                loadDataToTable();
+            }
+        } else {
+            loadDataToTable();
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnSearchMaLopSearch) {
+            timKiemTheoMaLop();
+        } else if (e.getSource() == btnSearchMaGVSearch) {
+            timKiemTheoMaGVCN();
         }
-        // Add action handling for other buttons here if needed
     }
-
-
 }

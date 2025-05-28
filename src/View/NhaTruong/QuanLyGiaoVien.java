@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import Controller.NhaTruongHomeController;
+import DAO.GiaoVienDAO;
+import Model.GiaoVien;
+import java.util.List;
 
 /**
  *
@@ -47,6 +50,7 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
     private JButton btnSua;
     private JButton btnXoa;
     private JButton btnTinhLuong;
+    private JButton btnTinhLuongTatCa;
 
     // Search components
     private JLabel lblSearchMaGVSearch;
@@ -65,6 +69,8 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
     private JButton btnBackToHome;
 
     private NhaTruongHomeController controller;
+
+    private GiaoVienDAO giaoVienDAO;
 
     public QuanLyGiaoVien() {
         setTitle("Quản Lý Giáo Viên");
@@ -279,22 +285,30 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
         btnTinhLuong = new JButton("Tính lương");
         inputPanel.add(btnTinhLuong, gbc);
 
-        // Search by MaKhoa (Row 3)
+        // Tinh luong tất cả button (Row 3)
         gbc.gridx = 3;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
+        btnTinhLuongTatCa = new JButton("Tính lương tất cả");
+        inputPanel.add(btnTinhLuongTatCa, gbc);
+
+        // Search by MaKhoa (Row 3)
+        gbc.gridx = 4;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
         lblSearchMaKhoaSearch = new JLabel("Tìm kiếm theo mã khoa:");
         inputPanel.add(lblSearchMaKhoaSearch, gbc);
 
-        gbc.gridx = 4;
+        gbc.gridx = 5;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         txtSearchMaKhoaSearch = new JTextField(10);
         inputPanel.add(txtSearchMaKhoaSearch, gbc);
 
-        gbc.gridx = 5;
+        gbc.gridx = 6;
         gbc.gridy = row;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.NONE;
@@ -379,15 +393,274 @@ public class QuanLyGiaoVien extends JFrame implements ActionListener {
 
         // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
+
+        // Khởi tạo GiaoVienDAO trong constructor
+        giaoVienDAO = new GiaoVienDAO();
+        
+        // Thêm ActionListener cho các nút
+        btnThem.addActionListener(this);
+        btnSua.addActionListener(this);
+        btnXoa.addActionListener(this);
+        btnTinhLuong.addActionListener(this);
+        btnTinhLuongTatCa.addActionListener(this);
+        btnSearchMaGVSearch.addActionListener(this);
+        btnSearchChucVuSearch.addActionListener(this);
+        btnSearchMaKhoaSearch.addActionListener(this);
+        btnSearchHeSoLuongSearch.addActionListener(this);
+        
+        // Load dữ liệu ban đầu
+        loadDataToTable();
+
+        // Thêm vào constructor sau khi khởi tạo dataTable
+        dataTable.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = dataTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    displaySelectedRow(selectedRow);
+                }
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnThem) {
+            themGiaoVien();
+        } else if (e.getSource() == btnSua) {
+            suaGiaoVien();
+        } else if (e.getSource() == btnXoa) {
+            xoaGiaoVien();
+        } else if (e.getSource() == btnTinhLuong) {
+            tinhLuong();
+        } else if (e.getSource() == btnTinhLuongTatCa) {
+            tinhLuongTatCa();
+        } else if (e.getSource() == btnSearchMaGVSearch) {
+            timTheoMaGV();
+        } else if (e.getSource() == btnSearchChucVuSearch) {
+            timTheoChucVu();
+        } else if (e.getSource() == btnSearchMaKhoaSearch) {
+            timTheoMaKhoa();
+        } else if (e.getSource() == btnSearchHeSoLuongSearch) {
+            timTheoHeSoLuong();
         }
-        // Add action handling for other buttons here if needed
     }
 
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<GiaoVien> danhSachGV = giaoVienDAO.getAllGiaoVien();
+        for (GiaoVien gv : danhSachGV) {
+            Object[] row = {
+                gv.getMaGV(),
+                gv.getHoTen(),
+                gv.getChucVu(),
+                gv.getGioiTinh(),
+                gv.getMaKhoa(),
+                gv.getNgaySinh(),
+                gv.getNgVaoLam(),
+                gv.getHeSoLuong(),
+                gv.getLuongCoBan(),
+                gv.getLuong()
+            };
+            tableModel.addRow(row);
+        }
+    }
 
+    private void themGiaoVien() {
+        try {
+            GiaoVien gv = layThongTinTuForm();
+            if (giaoVienDAO.themGiaoVien(gv)) {
+                JOptionPane.showMessageDialog(this, "Thêm giáo viên thành công!");
+                loadDataToTable();
+                xoaForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm giáo viên thất bại!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
+        }
+    }
+
+    private void suaGiaoVien() {
+        try {
+            GiaoVien gv = layThongTinTuForm();
+            if (giaoVienDAO.suaGiaoVien(gv)) {
+                JOptionPane.showMessageDialog(this, "Cập nhật giáo viên thành công!");
+                loadDataToTable();
+                xoaForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật giáo viên thất bại!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
+        }
+    }
+
+    private void xoaGiaoVien() {
+        String maGV = txtMaGV.getText().trim();
+        if (maGV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã giáo viên cần xóa!");
+            return;
+        }
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc muốn xóa giáo viên này?", 
+            "Xác nhận xóa", 
+            JOptionPane.YES_NO_OPTION);
+            
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (giaoVienDAO.xoaGiaoVien(maGV)) {
+                JOptionPane.showMessageDialog(this, "Xóa giáo viên thành công!");
+                loadDataToTable();
+                xoaForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Xóa giáo viên thất bại!");
+            }
+        }
+    }
+
+    private void tinhLuong() {
+        String maGV = txtMaGV.getText().trim();
+        if (maGV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã giáo viên!");
+            return;
+        }
+        
+        if (giaoVienDAO.tinhLuong(maGV)) {
+            JOptionPane.showMessageDialog(this, "Tính lương thành công!");
+            loadDataToTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Tính lương thất bại!");
+        }
+    }
+
+    private void tinhLuongTatCa() {
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Bạn có chắc muốn tính lương cho tất cả giáo viên?", 
+            "Xác nhận", 
+            JOptionPane.YES_NO_OPTION);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                if (giaoVienDAO.tinhLuongTatCa()) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Tính lương cho tất cả giáo viên thành công!", 
+                        "Thành công", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                    loadDataToTable(); // Cập nhật lại bảng
+                } else {
+                    JOptionPane.showMessageDialog(this, 
+                        "Không có giáo viên nào được cập nhật lương!", 
+                        "Thông báo", 
+                        JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, 
+                    "Lỗi khi tính lương: " + ex.getMessage(), 
+                    "Lỗi", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void timTheoMaGV() {
+        String maGV = txtSearchMaGVSearch.getText().trim();
+        if (maGV.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã giáo viên cần tìm!");
+            return;
+        }
+        
+        GiaoVien gv = giaoVienDAO.timTheoMaGV(maGV);
+        hienThiKetQuaTimKiem(gv != null ? List.of(gv) : List.of());
+    }
+
+    private void timTheoChucVu() {
+        String chucVu = txtSearchChucVuSearch.getText().trim();
+        if (chucVu.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập chức vụ cần tìm!");
+            return;
+        }
+        
+        List<GiaoVien> ketQua = giaoVienDAO.timTheoChucVu(chucVu);
+        hienThiKetQuaTimKiem(ketQua);
+    }
+
+    private void timTheoMaKhoa() {
+        String maKhoa = txtSearchMaKhoaSearch.getText().trim();
+        if (maKhoa.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã khoa cần tìm!");
+            return;
+        }
+        
+        List<GiaoVien> ketQua = giaoVienDAO.timTheoMaKhoa(maKhoa);
+        hienThiKetQuaTimKiem(ketQua);
+    }
+
+    private void timTheoHeSoLuong() {
+        try {
+            float heSoLuong = Float.parseFloat(txtSearchHeSoLuongSearch.getText().trim());
+            List<GiaoVien> ketQua = giaoVienDAO.timTheoHeSoLuong(heSoLuong);
+            hienThiKetQuaTimKiem(ketQua);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập hệ số lương hợp lệ!");
+        }
+    }
+
+    private void hienThiKetQuaTimKiem(List<GiaoVien> danhSachGV) {
+        tableModel.setRowCount(0);
+        for (GiaoVien gv : danhSachGV) {
+            Object[] row = {
+                gv.getMaGV(),
+                gv.getHoTen(),
+                gv.getChucVu(),
+                gv.getGioiTinh(),
+                gv.getMaKhoa(),
+                gv.getNgaySinh(),
+                gv.getNgVaoLam(),
+                gv.getHeSoLuong(),
+                gv.getLuongCoBan(),
+                gv.getLuong()
+            };
+            tableModel.addRow(row);
+        }
+    }
+
+    private GiaoVien layThongTinTuForm() {
+        GiaoVien gv = new GiaoVien();
+        gv.setMaGV(txtMaGV.getText().trim());
+        gv.setHoTen(txtHoTen.getText().trim());
+        gv.setChucVu(txtChucVu.getText().trim());
+        gv.setGioiTinh(txtGioiTinh.getText().trim());
+        gv.setMaKhoa(txtMaKhoa.getText().trim());
+        gv.setNgaySinh(txtNgaySinh.getText().trim());
+        gv.setNgVaoLam(txtNgayVaoLam.getText().trim());
+        gv.setHeSoLuong(Float.parseFloat(txtHeSoLuong.getText().trim()));
+        gv.setLuongCoBan(Float.parseFloat(txtLuongCoBan.getText().trim()));
+        return gv;
+    }
+
+    private void xoaForm() {
+        txtMaGV.setText("");
+        txtHoTen.setText("");
+        txtChucVu.setText("");
+        txtGioiTinh.setText("");
+        txtMaKhoa.setText("");
+        txtNgaySinh.setText("");
+        txtNgayVaoLam.setText("");
+        txtHeSoLuong.setText("");
+        txtLuongCoBan.setText("");
+    }
+
+    private void displaySelectedRow(int row) {
+        txtMaGV.setText(tableModel.getValueAt(row, 0).toString());
+        txtHoTen.setText(tableModel.getValueAt(row, 1).toString());
+        txtChucVu.setText(tableModel.getValueAt(row, 2).toString());
+        txtGioiTinh.setText(tableModel.getValueAt(row, 3).toString());
+        txtMaKhoa.setText(tableModel.getValueAt(row, 4).toString());
+        txtNgaySinh.setText(tableModel.getValueAt(row, 5).toString());
+        txtNgayVaoLam.setText(tableModel.getValueAt(row, 6).toString());
+        txtHeSoLuong.setText(tableModel.getValueAt(row, 7).toString());
+        txtLuongCoBan.setText(tableModel.getValueAt(row, 8).toString());
+    }
 }

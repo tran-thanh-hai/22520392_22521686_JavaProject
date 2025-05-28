@@ -9,7 +9,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import Controller.NhaTruongHomeController;
+import DAO.KhoaDAO;
+import Model.Khoa;
+import java.util.List;
 
 /**
  *
@@ -42,6 +47,7 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
     private JButton btnBackToHome;
 
     private NhaTruongHomeController controller;
+    private KhoaDAO khoaDAO;
 
     public QuanLyKhoa() {
         setTitle("Quản Lý Khoa");
@@ -51,6 +57,7 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         setLayout(new BorderLayout());
 
         controller = new NhaTruongHomeController(this);
+        khoaDAO = new KhoaDAO();
 
         // Create a panel for the back button and title
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -80,6 +87,21 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(dataTable);
         add(scrollPane, BorderLayout.CENTER);
 
+        // Thêm sự kiện click vào bảng
+        dataTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = dataTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    txtMaKhoa.setText(tableModel.getValueAt(selectedRow, 0).toString());
+                    txtTenKhoa.setText(tableModel.getValueAt(selectedRow, 1).toString());
+                    txtNgayThanhLap.setText(tableModel.getValueAt(selectedRow, 2).toString());
+                    txtTruongKhoa.setText(tableModel.getValueAt(selectedRow, 3).toString());
+                    txtMaKhoa.setEnabled(false);
+                }
+            }
+        });
+
         // Panel nhập liệu và nút hành động
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -102,6 +124,7 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         btnThem = new JButton("Thêm");
+        btnThem.addActionListener(this);
         inputPanel.add(btnThem, gbc);
 
         gbc.gridx = 3;
@@ -116,6 +139,7 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
 
         gbc.gridx = 5;
         btnSearchMaKhoaSearch = new JButton("Tìm");
+        btnSearchMaKhoaSearch.addActionListener(this);
         inputPanel.add(btnSearchMaKhoaSearch, gbc);
 
         // Tên khoa
@@ -133,6 +157,7 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         btnSua = new JButton("Sửa");
+        btnSua.addActionListener(this);
         inputPanel.add(btnSua, gbc);
 
         // Ngày thành lập
@@ -150,6 +175,7 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         btnXoa = new JButton("Xóa");
+        btnXoa.addActionListener(this);
         inputPanel.add(btnXoa, gbc);
 
         // Trưởng khoa
@@ -165,16 +191,104 @@ public class QuanLyKhoa extends JFrame implements ActionListener {
         inputPanel.add(txtTruongKhoa, gbc);
 
         add(inputPanel, BorderLayout.SOUTH);
+
+        // Load dữ liệu ban đầu
+        loadDataToTable();
+    }
+
+    private void loadDataToTable() {
+        // Xóa dữ liệu cũ
+        tableModel.setRowCount(0);
+        
+        // Lấy danh sách khoa từ database
+        List<Khoa> danhSachKhoa = khoaDAO.getAllKhoa();
+        
+        // Thêm dữ liệu vào bảng
+        for (Khoa khoa : danhSachKhoa) {
+            Object[] row = {
+                khoa.getMaKhoa(),
+                khoa.getTenKhoa(),
+                khoa.getNgThanhLap(),
+                khoa.getTrgKhoa()
+            };
+            tableModel.addRow(row);
+        }
+    }
+
+    private void clearFields() {
+        txtMaKhoa.setText("");
+        txtTenKhoa.setText("");
+        txtNgayThanhLap.setText("");
+        txtTruongKhoa.setText("");
+        txtMaKhoa.setEnabled(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnThem) {
+            Khoa khoa = new Khoa();
+            khoa.setMaKhoa(txtMaKhoa.getText());
+            khoa.setTenKhoa(txtTenKhoa.getText());
+            khoa.setNgThanhLap(txtNgayThanhLap.getText());
+            khoa.setTrgKhoa(txtTruongKhoa.getText());
+
+            if (khoaDAO.themKhoa(khoa)) {
+                JOptionPane.showMessageDialog(this, "Thêm khoa thành công!");
+                loadDataToTable();
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm khoa thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (e.getSource() == btnSua) {
+            Khoa khoa = new Khoa();
+            khoa.setMaKhoa(txtMaKhoa.getText());
+            khoa.setTenKhoa(txtTenKhoa.getText());
+            khoa.setNgThanhLap(txtNgayThanhLap.getText());
+            khoa.setTrgKhoa(txtTruongKhoa.getText());
+
+            if (khoaDAO.suaKhoa(khoa)) {
+                JOptionPane.showMessageDialog(this, "Cập nhật khoa thành công!");
+                loadDataToTable();
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật khoa thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (e.getSource() == btnXoa) {
+            String maKhoa = txtMaKhoa.getText();
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                "Bạn có chắc chắn muốn xóa khoa này?", 
+                "Xác nhận xóa", 
+                JOptionPane.YES_NO_OPTION);
+            
+            if (confirm == JOptionPane.YES_OPTION) {
+                if (khoaDAO.xoaKhoa(maKhoa)) {
+                    JOptionPane.showMessageDialog(this, "Xóa khoa thành công!");
+                    loadDataToTable();
+                    clearFields();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Xóa khoa thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else if (e.getSource() == btnSearchMaKhoaSearch) {
+            String maKhoa = txtSearchMaKhoaSearch.getText();
+            Khoa khoa = khoaDAO.timKhoaTheoMa(maKhoa);
+            
+            if (khoa != null) {
+                tableModel.setRowCount(0);
+                Object[] row = {
+                    khoa.getMaKhoa(),
+                    khoa.getTenKhoa(),
+                    khoa.getNgThanhLap(),
+                    khoa.getTrgKhoa()
+                };
+                tableModel.addRow(row);
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy khoa!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                loadDataToTable();
+            }
         }
-        // Add action handling for other buttons here if needed
     }
-
-
 }
 

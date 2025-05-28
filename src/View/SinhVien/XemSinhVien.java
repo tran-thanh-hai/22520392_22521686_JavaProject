@@ -4,18 +4,21 @@
  */
 package View.SinhVien;
 
+import Model.SinhVien;
+import DAO.SinhVienDAO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import Controller.SinhVienHomeController;
 
 /**
  *
  * @author rubik
  */
-public class XemSinhVien extends JFrame {
+public class XemSinhVien extends JFrame implements ActionListener {
 
     private JLabel lblTitle;
     private JTable dataTable;
@@ -40,6 +43,8 @@ public class XemSinhVien extends JFrame {
     private JButton btnBackToHome;
 
     private SinhVienHomeController controller;
+
+    private SinhVienDAO sinhVienDAO;
 
     public XemSinhVien() {
         setTitle("Xem Sinh Viên");
@@ -195,7 +200,184 @@ public class XemSinhVien extends JFrame {
 
         // Add the input panel to the frame
         add(inputPanel, BorderLayout.SOUTH);
+
+        sinhVienDAO = new SinhVienDAO();
+        
+        // Thêm action listeners cho các nút tìm kiếm
+        btnSearchMaSVSearch = new JButton("Tìm");
+        btnSearchMaLopSearch = new JButton("Tìm");
+        btnSearchDiemTrungBinh = new JButton("Tìm");
+        btnSearchXepLoai = new JButton("Tìm");
+        
+        btnSearchMaSVSearch.addActionListener(this);
+        btnSearchMaLopSearch.addActionListener(this);
+        btnSearchDiemTrungBinh.addActionListener(this);
+        btnSearchXepLoai.addActionListener(this);
+        
+        // Thêm các nút tìm kiếm vào panel
+        gbc.gridx = 5;
+        gbc.gridy = 0;
+        inputPanel.add(btnSearchMaSVSearch, gbc);
+        
+        gbc.gridy = 1;
+        inputPanel.add(btnSearchMaLopSearch, gbc);
+        
+        gbc.gridy = 2;
+        inputPanel.add(btnSearchDiemTrungBinh, gbc);
+        
+        gbc.gridy = 3;
+        inputPanel.add(btnSearchXepLoai, gbc);
+        
+        // Load dữ liệu ban đầu
+        loadDataToTable();
     }
 
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<SinhVien> dsSinhVien = sinhVienDAO.getAllSinhVien();
+        for (SinhVien sv : dsSinhVien) {
+            Object[] row = {
+                sv.getMaHV(),
+                sv.getHoTen(),
+                sv.getGioiTinh(),
+                sv.getMaLop(),
+                sv.getNgaySinh(),
+                sv.getNoiSinh(),
+                sv.getDiemTB(),
+                sv.getXepLoai()
+            };
+            tableModel.addRow(row);
+        }
+    }
 
+    private void timKiemTheoMaSV() {
+        String maSV = txtSearchMaSVSearch.getText().trim();
+        if (!maSV.isEmpty()) {
+            SinhVien sv = sinhVienDAO.timTheoMaSV(maSV);
+            tableModel.setRowCount(0);
+            if (sv != null) {
+                Object[] row = {
+                    sv.getMaHV(),
+                    sv.getHoTen(),
+                    sv.getGioiTinh(),
+                    sv.getMaLop(),
+                    sv.getNgaySinh(),
+                    sv.getNoiSinh(),
+                    sv.getDiemTB(),
+                    sv.getXepLoai()
+                };
+                tableModel.addRow(row);
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy sinh viên với mã " + maSV);
+                loadDataToTable();
+            }
+        } else {
+            loadDataToTable();
+        }
+    }
+
+    private void timKiemTheoMaLop() {
+        String maLop = txtSearchMaLopSearch.getText().trim();
+        if (!maLop.isEmpty()) {
+            List<SinhVien> dsSinhVien = sinhVienDAO.timTheoMaLop(maLop);
+            tableModel.setRowCount(0);
+            if (!dsSinhVien.isEmpty()) {
+                for (SinhVien sv : dsSinhVien) {
+                    Object[] row = {
+                        sv.getMaHV(),
+                        sv.getHoTen(),
+                        sv.getGioiTinh(),
+                        sv.getMaLop(),
+                        sv.getNgaySinh(),
+                        sv.getNoiSinh(),
+                        sv.getDiemTB(),
+                        sv.getXepLoai()
+                    };
+                    tableModel.addRow(row);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy sinh viên trong lớp " + maLop);
+                loadDataToTable();
+            }
+        } else {
+            loadDataToTable();
+        }
+    }
+
+    private void timKiemTheoDiemTB() {
+        try {
+            float diemTB = Float.parseFloat(txtSearchDiemTrungBinh.getText().trim());
+            tableModel.setRowCount(0);
+            List<SinhVien> dsSinhVien = sinhVienDAO.getAllSinhVien();
+            boolean found = false;
+            for (SinhVien sv : dsSinhVien) {
+                if (sv.getDiemTB() == diemTB) {
+                    Object[] row = {
+                        sv.getMaHV(),
+                        sv.getHoTen(),
+                        sv.getGioiTinh(),
+                        sv.getMaLop(),
+                        sv.getNgaySinh(),
+                        sv.getNoiSinh(),
+                        sv.getDiemTB(),
+                        sv.getXepLoai()
+                    };
+                    tableModel.addRow(row);
+                    found = true;
+                }
+            }
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy sinh viên có điểm trung bình " + diemTB);
+                loadDataToTable();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập điểm trung bình hợp lệ!");
+        }
+    }
+
+    private void timKiemTheoXepLoai() {
+        String xepLoai = txtSearchXepLoai.getText().trim();
+        if (!xepLoai.isEmpty()) {
+            tableModel.setRowCount(0);
+            List<SinhVien> dsSinhVien = sinhVienDAO.getAllSinhVien();
+            boolean found = false;
+            for (SinhVien sv : dsSinhVien) {
+                if (sv.getXepLoai() != null && sv.getXepLoai().equalsIgnoreCase(xepLoai)) {
+                    Object[] row = {
+                        sv.getMaHV(),
+                        sv.getHoTen(),
+                        sv.getGioiTinh(),
+                        sv.getMaLop(),
+                        sv.getNgaySinh(),
+                        sv.getNoiSinh(),
+                        sv.getDiemTB(),
+                        sv.getXepLoai()
+                    };
+                    tableModel.addRow(row);
+                    found = true;
+                }
+            }
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy sinh viên có xếp loại " + xepLoai);
+                loadDataToTable();
+            }
+        } else {
+            loadDataToTable();
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnBackToHome) {
+            controller.navigateToTrangChu();
+        } else if (e.getSource() == btnSearchMaSVSearch) {
+            timKiemTheoMaSV();
+        } else if (e.getSource() == btnSearchMaLopSearch) {
+            timKiemTheoMaLop();
+        } else if (e.getSource() == btnSearchDiemTrungBinh) {
+            timKiemTheoDiemTB();
+        } else if (e.getSource() == btnSearchXepLoai) {
+            timKiemTheoXepLoai();
+        }
+    }
 }

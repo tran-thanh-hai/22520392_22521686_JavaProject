@@ -4,11 +4,14 @@
  */
 package View.SinhVien;
 
+import Model.Khoa;
+import DAO.KhoaDAO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import Controller.SinhVienHomeController;
 
 /**
@@ -31,6 +34,8 @@ public class XemKhoa extends JFrame implements ActionListener {
     private JButton btnBackToHome;
 
     private SinhVienHomeController controller;
+
+    private KhoaDAO khoaDAO;
 
     public XemKhoa() {
         setTitle("Xem Khoa");
@@ -100,14 +105,59 @@ public class XemKhoa extends JFrame implements ActionListener {
 
 
         add(inputPanel, BorderLayout.SOUTH);
+
+        khoaDAO = new KhoaDAO();
+        
+        // Thêm action listener cho nút tìm kiếm
+        btnSearchMaKhoaSearch.addActionListener(this);
+        
+        // Load dữ liệu ban đầu
+        loadDataToTable();
+    }
+
+    private void loadDataToTable() {
+        tableModel.setRowCount(0);
+        List<Khoa> danhSachKhoa = khoaDAO.getAllKhoa();
+        for (Khoa khoa : danhSachKhoa) {
+            Object[] row = {
+                khoa.getMaKhoa(),
+                khoa.getTenKhoa(),
+                khoa.getNgThanhLap(),
+                khoa.getTrgKhoa()
+            };
+            tableModel.addRow(row);
+        }
+    }
+
+    private void timKiemTheoMaKhoa() {
+        String maKhoa = txtSearchMaKhoaSearch.getText().trim();
+        if (!maKhoa.isEmpty()) {
+            Khoa khoa = khoaDAO.timKhoaTheoMa(maKhoa);
+            tableModel.setRowCount(0);
+            if (khoa != null) {
+                Object[] row = {
+                    khoa.getMaKhoa(),
+                    khoa.getTenKhoa(),
+                    khoa.getNgThanhLap(),
+                    khoa.getTrgKhoa()
+                };
+                tableModel.addRow(row);
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy khoa với mã " + maKhoa);
+                loadDataToTable(); // Load lại toàn bộ dữ liệu nếu không tìm thấy
+            }
+        } else {
+            loadDataToTable(); // Load lại toàn bộ dữ liệu nếu ô tìm kiếm trống
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnBackToHome) {
             controller.navigateToTrangChu();
+        } else if (e.getSource() == btnSearchMaKhoaSearch) {
+            timKiemTheoMaKhoa();
         }
-        // Add action handling for other buttons here if needed
     }
 
 
