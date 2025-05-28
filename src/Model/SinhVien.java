@@ -8,6 +8,6 @@ package Model;
  *
  * @author rubik
  */
-public class SinhVien {
+public class SinhVien extends ThanhVien{
     
 }
