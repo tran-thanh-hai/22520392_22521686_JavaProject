@@ -52,7 +52,7 @@ public class QuanLyDiemThi extends JFrame {
     public QuanLyDiemThi() {
         setTitle("Quản Lý Điểm Thi");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 600); // Adjusted size for table
+        setSize(950, 650); // Adjusted size for consistency
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
@@ -83,7 +83,7 @@ public class QuanLyDiemThi extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Add components to inputPanel using GridBagLayout
-        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields/Buttons
+        // Column 0: Labels, Column 1: TextFields, Column 2: Action Buttons, Column 3: Search Labels, Column 4: Search TextFields, Column 5: Search Buttons
         int row = 0;
 
         // Mã HV
@@ -121,6 +121,13 @@ public class QuanLyDiemThi extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         txtSearchMaMH = new JTextField(10);
         inputPanel.add(txtSearchMaMH, gbc);
+
+        gbc.gridx = 5;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+        btnSearchMaMH = new JButton("Tìm");
+        inputPanel.add(btnSearchMaMH, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -161,6 +168,13 @@ public class QuanLyDiemThi extends JFrame {
         txtSearchLanThi = new JTextField(10);
         inputPanel.add(txtSearchLanThi, gbc);
 
+        gbc.gridx = 5;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+        btnSearchLanThi = new JButton("Tìm");
+        inputPanel.add(btnSearchLanThi, gbc);
+
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
@@ -199,6 +213,13 @@ public class QuanLyDiemThi extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         txtSearchDiem = new JTextField(10);
         inputPanel.add(txtSearchDiem, gbc);
+
+        gbc.gridx = 5;
+        gbc.gridy = row;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+        btnSearchDiem = new JButton("Tìm");
+        inputPanel.add(btnSearchDiem, gbc);
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;
