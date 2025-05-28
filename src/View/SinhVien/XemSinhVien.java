@@ -34,8 +34,6 @@ public class XemSinhVien extends JFrame {
     private JTextField txtSearchXepLoai;
     private JButton btnSearchXepLoai;
 
-    private JButton btnBackToHome;
-
     public XemSinhVien() {
         setTitle("Xem Sinh Viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,20 +41,10 @@ public class XemSinhVien extends JFrame {
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
-        // Create a panel for the back button and title
-        JPanel topPanel = new JPanel(new BorderLayout());
-
-        // Back Button
-        btnBackToHome = new JButton("Quay về trang chủ");
-        topPanel.add(btnBackToHome, BorderLayout.WEST);
-
         // Title Label
         lblTitle = new JLabel("Xem Sinh Viên", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
-        topPanel.add(lblTitle, BorderLayout.CENTER);
-
-        // Add the top panel to the frame
-        add(topPanel, BorderLayout.NORTH);
+        add(lblTitle, BorderLayout.NORTH);
 
         // Data Display Area (using JTable)
         tableModel = new DefaultTableModel();

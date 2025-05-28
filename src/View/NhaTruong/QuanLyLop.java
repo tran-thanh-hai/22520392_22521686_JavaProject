@@ -44,8 +44,6 @@ public class QuanLyLop extends JFrame {
     private JTextField txtSearchMaGVSearch;
     private JButton btnSearchMaGVSearch;
 
-    private JButton btnBackToHome;
-
     public QuanLyLop() {
         setTitle("Quản lý Lớp");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,20 +51,10 @@ public class QuanLyLop extends JFrame {
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
-        // Create a panel for the back button and title
-        JPanel topPanel = new JPanel(new BorderLayout());
-
-        // Back Button
-        btnBackToHome = new JButton("Quay lại trang chủ");
-        topPanel.add(btnBackToHome, BorderLayout.WEST);
-
         // Title Label
         lblTitle = new JLabel("Quản lý Lớp", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
-        topPanel.add(lblTitle, BorderLayout.CENTER);
-
-        // Add the top panel to the frame
-        add(topPanel, BorderLayout.NORTH);
+        add(lblTitle, BorderLayout.NORTH);
 
         // Data Display Area (using JTable)
         tableModel = new DefaultTableModel();
@@ -174,12 +162,7 @@ public class QuanLyLop extends JFrame {
         txtSearchMaGVSearch = new JTextField(10);
         inputPanel.add(txtSearchMaGVSearch, gbc);
 
-        gbc.gridx = 5;
-        gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        btnSearchMaGVSearch = new JButton("Tìm");
-        inputPanel.add(btnSearchMaGVSearch, gbc);
+
 
         row++;
         gbc.fill = GridBagConstraints.HORIZONTAL;

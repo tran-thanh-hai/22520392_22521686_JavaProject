@@ -6,32 +6,25 @@ package View.SinhVien;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import Controller.SinhVienLoginController;
 
 /**
  *
  * @author rubik
  */
-public class DangNhapSinhVien extends JFrame implements ActionListener {
+public class DangNhapSinhVien extends JFrame {
 
     private JLabel lblUsername;
     private JLabel lblPassword;
     private JTextField txtUsername;
-    private JPasswordField txtPassword;
+    private JTextField txtPassword;
     private JButton btnLogin;
     private JButton btnExit;
-
-    private SinhVienLoginController controller;
 
     public DangNhapSinhVien() {
         setTitle("Tài khoản sinh viên");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200);
         setLocationRelativeTo(null); // Center the window
-
-        controller = new SinhVienLoginController(this);
 
         // Create components
         lblUsername = new JLabel("Tên Đăng Nhập:");
@@ -40,10 +33,6 @@ public class DangNhapSinhVien extends JFrame implements ActionListener {
         txtPassword = new JPasswordField(15); // Use JPasswordField for password input
         btnLogin = new JButton("Đăng nhập");
         btnExit = new JButton("Thoát");
-
-        // Add ActionListeners to buttons
-        btnLogin.addActionListener(this);
-        btnExit.addActionListener(this);
 
         // Create panels for layout
         JPanel panel = new JPanel(new GridBagLayout());
@@ -82,17 +71,6 @@ public class DangNhapSinhVien extends JFrame implements ActionListener {
 
         // Add panel to the frame
         add(panel);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnLogin) {
-            String username = txtUsername.getText();
-            String password = new String(txtPassword.getPassword());
-            controller.handleLogin(username, password);
-        } else if (e.getSource() == btnExit) {
-            System.exit(0);
-        }
     }
 
     public static void main(String[] args) {

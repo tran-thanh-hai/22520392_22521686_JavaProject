@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package View.NhaTruong;
+package View.SinhVien;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.awt.*;
  *
  * @author rubik
  */
-public class DangNhapNhaTruong extends JFrame {
+public class DangNhap extends JFrame {
 
     private JLabel lblUsername;
     private JLabel lblPassword;
@@ -20,8 +20,8 @@ public class DangNhapNhaTruong extends JFrame {
     private JButton btnLogin;
     private JButton btnExit;
 
-    public DangNhapNhaTruong() {
-        setTitle("Tài khoản trường");
+    public DangNhap() {
+        setTitle("Đăng Nhập");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200);
         setLocationRelativeTo(null); // Center the window
@@ -75,7 +75,7 @@ public class DangNhapNhaTruong extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new DangNhapNhaTruong().setVisible(true);
+            new DangNhap().setVisible(true);
         });
     }
 }

@@ -36,8 +36,6 @@ public class XemMonHoc extends JFrame {
     private JTextField txtSearchMaKhoaSearch;
     private JButton btnSearchMaKhoaSearch;
 
-    private JButton btnBackToHome;
-
     public XemMonHoc() {
         setTitle("Xem Môn học");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,20 +43,10 @@ public class XemMonHoc extends JFrame {
         setLocationRelativeTo(null); // Center the window
         setLayout(new BorderLayout());
 
-        // Create a panel for the back button and title
-        JPanel topPanel = new JPanel(new BorderLayout());
-
-        // Back Button
-        btnBackToHome = new JButton("Quay lại trang chủ");
-        topPanel.add(btnBackToHome, BorderLayout.WEST);
-
         // Title Label
         lblTitle = new JLabel("Quản lý Môn học", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
-        topPanel.add(lblTitle, BorderLayout.CENTER);
-
-        // Add the top panel to the frame
-        add(topPanel, BorderLayout.NORTH);
+        add(lblTitle, BorderLayout.NORTH);
 
         // Data Display Area (using JTable)
         tableModel = new DefaultTableModel();

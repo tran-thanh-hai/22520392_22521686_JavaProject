@@ -25,8 +25,6 @@ public class XemKhoa extends JFrame {
     private JTextField txtSearchMaKhoaSearch;
     private JButton btnSearchMaKhoaSearch;
 
-    private JButton btnBackToHome;
-
     public XemKhoa() {
         setTitle("Xem Khoa");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,20 +32,10 @@ public class XemKhoa extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Create a panel for the back button and title
-        JPanel topPanel = new JPanel(new BorderLayout());
-
-        // Back Button
-        btnBackToHome = new JButton("Quay về trang chủ");
-        topPanel.add(btnBackToHome, BorderLayout.WEST);
-
         // Tiêu đề
         lblTitle = new JLabel("Quản Lý Khoa", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
-        topPanel.add(lblTitle, BorderLayout.CENTER);
-
-        // Add the top panel to the frame
-        add(topPanel, BorderLayout.NORTH);
+        add(lblTitle, BorderLayout.NORTH);
 
         // Khu vực hiển thị dữ liệu
         tableModel = new DefaultTableModel();
